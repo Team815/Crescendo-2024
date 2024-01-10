@@ -4,17 +4,17 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.SimpleDrive;
 import frc.robot.input.InputDevice;
 import frc.robot.input.XboxController;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.SwerveModule;
 
 public class RobotContainer {
     private InputDevice controller = new XboxController();
-    private SwerveDrive drive;
+    private final SwerveDrive drive;
 
     public RobotContainer() {
         final int frontLeftSpinId = 6;
@@ -34,23 +34,61 @@ public class RobotContainer {
         final double backLeftAngularOffset = 95d;
         final double backRightAngularOffset = 170d;
 
-        SwerveModule module = new SwerveModule(backRightSpinId, backRightRotateId);
-        drive = new SwerveDrive(module);
+        // The max frame perimeter length is 120 in. For a square chassis,
+        // each side would be 30 in. For safety, our chassis sides are 29 in.
+        // Half of this is 14.5 in., or 0.368 m.
+
+        final var halfLength = 0.368d;
+        final var halfWidth = 0.368d;
+
+        var moduleFrontLeft = SwerveModule.fromIds(
+                frontLeftSpinId,
+                frontLeftRotateId,
+                frontLeftRotateSensorId,
+                halfLength,
+                halfWidth
+        );
+
+        var moduleFrontRight = SwerveModule.fromIds(
+                frontRightSpinId,
+                frontRightRotateId,
+                frontRightRotateSensorId,
+                halfLength,
+                -halfWidth);
+
+        var moduleBackLeft = SwerveModule.fromIds(
+                backLeftSpinId,
+                backLeftRotateId,
+                backLeftRotateSensorId,
+                -halfLength,
+                halfWidth);
+
+        var moduleBackRight = SwerveModule.fromIds(
+                backRightSpinId,
+                backRightRotateId,
+                backRightRotateSensorId,
+                -halfLength,
+                -halfWidth);
+
+        drive = new SwerveDrive(
+                new Pigeon2(0),
+                moduleFrontLeft,
+                moduleFrontRight,
+                moduleBackLeft,
+                moduleBackRight);
 
         configureBindings();
-        Command command = new SimpleDrive(
-            drive,
-            () -> controller.getForwardVelocity(),
-            () -> controller.getSidewaysVelocity(),
-            () -> controller.getAngularVelocity());
-        drive.setDefaultCommand(command);
     }
 
     private void configureBindings() {
+        drive.setDefaultCommand(new SimpleDrive(
+                drive,
+                () -> controller.getForwardVelocity(),
+                () -> controller.getSidewaysVelocity(),
+                () -> controller.getAngularVelocity()));
     }
 
     public Command getAutonomousCommand() {
-        return Commands.run(() -> {
-        });
+        return Commands.none();
     }
 }
