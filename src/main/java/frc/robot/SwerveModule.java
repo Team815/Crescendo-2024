@@ -58,13 +58,13 @@ public class SwerveModule {
     public void drive(SwerveModuleState state) {
         state = SwerveModuleState.optimize(
                 state,
-                Rotation2d.fromDegrees(angleSensor.getAbsolutePosition().getValue()));
+                Rotation2d.fromDegrees(angleSensor.getAbsolutePosition().getValue() * 360));
         var spinSpeed = MathUtil.clamp(state.speedMetersPerSecond, -maxLinearSpeed, maxLinearSpeed);
         linearMotor.set(spinSpeed);
 
         var rotation = state.angle.getDegrees();
         pid.setSetpoint(rotation);
-        var response = -pid.calculate(angleSensor.getAbsolutePosition().getValue());
+        var response = -pid.calculate(angleSensor.getAbsolutePosition().getValue() * 360);
         angularMotor.set(MathUtil.clamp(response, -maxAngularSpeed, maxAngularSpeed));
     }
 

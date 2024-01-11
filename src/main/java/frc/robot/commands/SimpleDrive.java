@@ -26,8 +26,8 @@ public class SimpleDrive extends Command {
     @Override
     public void execute() {
         drive.drive(
-            forwardVelocity.getAsDouble(),
-            sidewaysVelocity.getAsDouble(),
-            angularVelocity.getAsDouble());
+            0.1d,
+            0d,
+            0d);
     }
 }

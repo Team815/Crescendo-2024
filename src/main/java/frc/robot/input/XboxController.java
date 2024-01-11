@@ -1,24 +1,26 @@
 package frc.robot.input;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class XboxController extends CommandXboxController implements InputDevice {
+    private static final double DEADBAND = 0.12d;
     public XboxController() {
         super(0);
     }
 
     @Override
     public double getSidewaysVelocity() {
-        return -getLeftX();
+        return MathUtil.applyDeadband(-getLeftX(), DEADBAND);
     }
 
     @Override
     public double getForwardVelocity() {
-        return -getLeftY();
+        return MathUtil.applyDeadband(-getLeftY(), DEADBAND);
     }
 
     @Override
     public double getAngularVelocity() {
-        return -getRightX();
+        return MathUtil.applyDeadband(-getRightX(), DEADBAND);
     }
 }
