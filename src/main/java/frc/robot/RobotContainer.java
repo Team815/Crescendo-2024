@@ -17,22 +17,22 @@ public class RobotContainer {
     private final SwerveDrive drive;
 
     public RobotContainer() {
-        final int frontLeftSpinId = 6;
-        final int frontLeftRotateId = 5;
-        final int frontRightSpinId = 3;
-        final int frontRightRotateId = 4;
-        final int backLeftSpinId = 8;
-        final int backLeftRotateId = 2;
-        final int backRightSpinId = 7;
-        final int backRightRotateId = 1;
-        final int frontLeftRotateSensorId = 9;
-        final int frontRightRotateSensorId = 10;
-        final int backLeftRotateSensorId = 11;
-        final int backRightRotateSensorId = 12;
-        final double frontLeftAngularOffset = -173d;
-        final double frontRightAngularOffset = -35d;
-        final double backLeftAngularOffset = 95d;
-        final double backRightAngularOffset = 170d;
+        final int frontLeftSpinId = 1;
+        final int frontLeftRotateId = 2;
+        final int frontRightSpinId = 7;
+        final int frontRightRotateId = 8;
+        final int backLeftSpinId = 5;
+        final int backLeftRotateId = 6;
+        final int backRightSpinId = 4;
+        final int backRightRotateId = 3;
+        final int frontLeftRotateSensorId = 1;
+        final int frontRightRotateSensorId = 2;
+        final int backLeftRotateSensorId = 3;
+        final int backRightRotateSensorId = 4;
+        final double frontLeftAngularOffset = 0.271d;
+        final double frontRightAngularOffset = 0.515d;
+        final double backLeftAngularOffset = 0.47d;
+        final double backRightAngularOffset = 0.748d;
 
         // The max frame perimeter length is 120 in. For a square chassis,
         // each side would be 30 in. For safety, our chassis sides are 29 in.
@@ -45,6 +45,7 @@ public class RobotContainer {
                 frontLeftSpinId,
                 frontLeftRotateId,
                 frontLeftRotateSensorId,
+                frontLeftAngularOffset,
                 halfLength,
                 halfWidth
         );
@@ -53,6 +54,7 @@ public class RobotContainer {
                 frontRightSpinId,
                 frontRightRotateId,
                 frontRightRotateSensorId,
+                frontRightAngularOffset,
                 halfLength,
                 -halfWidth);
 
@@ -60,6 +62,7 @@ public class RobotContainer {
                 backLeftSpinId,
                 backLeftRotateId,
                 backLeftRotateSensorId,
+                backLeftAngularOffset,
                 -halfLength,
                 halfWidth);
 
@@ -67,6 +70,7 @@ public class RobotContainer {
                 backRightSpinId,
                 backRightRotateId,
                 backRightRotateSensorId,
+                backRightAngularOffset,
                 -halfLength,
                 -halfWidth);
 

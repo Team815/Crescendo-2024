@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -34,8 +36,6 @@ public class SwerveModule {
         this.angularMotor = angularMotor;
         this.angleSensor = angleSensor;
         this.translation = translation;
-        //angleSensor.configFactoryDefault();
-        //angleSensor.configMagnetOffset(angularOffset);
         pid.enableContinuousInput(0d, 360d);
     }
 
@@ -43,6 +43,7 @@ public class SwerveModule {
             int linearMotorId,
             int angularMotorId,
             int angleSensorId,
+            double angleOffset,
             double x,
             double y) {
         var linearMotor = new CANSparkMax(linearMotorId, MotorType.kBrushless);
@@ -52,6 +53,11 @@ public class SwerveModule {
         setMaxAcceleration(linearMotor, DEFAULT_MAX_LINEAR_ACCELERATION);
         setMaxAcceleration(angularMotor, DEFAULT_MAX_ANGULAR_ACCELERATION);
         var angleSensor = new CANcoder(angleSensorId);
+        var config = new MagnetSensorConfigs();
+        config.MagnetOffset = angleOffset;
+        var configurator = angleSensor.getConfigurator();
+        configurator.apply(new CANcoderConfiguration());
+        configurator.apply(config);
         return new SwerveModule(linearMotor, angularMotor, angleSensor, new Translation2d(x, y));
     }
 

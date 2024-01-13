@@ -36,11 +36,11 @@ public class SwerveDrive extends SubsystemBase {
                         .toArray(SwerveModulePosition[]::new));
     }
 
-    public void drive(double forwardVelocity, double sidewaysVelocity, double angularVelocity) {
-        speeds = new ChassisSpeeds(forwardVelocity, sidewaysVelocity, angularVelocity);
+    public void drive(ChassisSpeeds speeds) {
+        this.speeds = speeds;
         var robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(gyro.getYaw().getValue()));
         var states = kinematics.toSwerveModuleStates(speeds);
-        for (var i = 3; i < modules.length; i++) {
+        for (var i = 0; i < 4; i++) {
             modules[i].drive(states[i]);
         }
     }
