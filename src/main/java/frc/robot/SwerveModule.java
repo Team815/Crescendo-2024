@@ -17,7 +17,7 @@ public class SwerveModule {
     public static final double DEFAULT_MAX_ANGULAR_SPEED = 0.2d;
     public static final double DEFAULT_MAX_LINEAR_ACCELERATION = 0.1d;
     public static final double DEFAULT_MAX_ANGULAR_ACCELERATION = 0.1d;
-    public static final double DEFAULT_P = 0.015d;
+    public static final double DEFAULT_P = 5d;
 
     private double maxLinearSpeed = DEFAULT_MAX_LINEAR_SPEED;
     private double maxAngularSpeed = DEFAULT_MAX_ANGULAR_SPEED;
@@ -36,7 +36,7 @@ public class SwerveModule {
         this.angularMotor = angularMotor;
         this.angleSensor = angleSensor;
         this.translation = translation;
-        pid.enableContinuousInput(0d, 360d);
+        pid.enableContinuousInput(-0.5d, 0.5d);
     }
 
     public static SwerveModule fromIds(
@@ -62,15 +62,16 @@ public class SwerveModule {
     }
 
     public void drive(SwerveModuleState state) {
+        var angle = angleSensor.getAbsolutePosition().getValue();
         state = SwerveModuleState.optimize(
                 state,
-                Rotation2d.fromDegrees(angleSensor.getAbsolutePosition().getValue() * 360));
+                Rotation2d.fromRotations(angle));
         var spinSpeed = MathUtil.clamp(state.speedMetersPerSecond, -maxLinearSpeed, maxLinearSpeed);
         linearMotor.set(spinSpeed);
 
-        var rotation = state.angle.getDegrees();
+        var rotation = state.angle.getRotations();
         pid.setSetpoint(rotation);
-        var response = -pid.calculate(angleSensor.getAbsolutePosition().getValue() * 360);
+        var response = -pid.calculate(angle);
         angularMotor.set(MathUtil.clamp(response, -maxAngularSpeed, maxAngularSpeed));
     }
 
@@ -82,14 +83,6 @@ public class SwerveModule {
         return new SwerveModulePosition(
                 linearMotor.getEncoder().getPosition(),
                 Rotation2d.fromDegrees(angleSensor.getAbsolutePosition().getValue()));
-    }
-
-    public void setMaxPropelAcceleration(double maxAcceleration) {
-        setMaxAcceleration(linearMotor, maxAcceleration);
-    }
-
-    public void setMaxRotateAcceleration(double maxAcceleration) {
-        setMaxAcceleration(angularMotor, maxAcceleration);
     }
 
     private static void setMaxAcceleration(CANSparkMax motor, double maxAcceleration) {

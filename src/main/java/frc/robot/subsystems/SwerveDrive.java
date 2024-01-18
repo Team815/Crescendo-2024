@@ -34,15 +34,20 @@ public class SwerveDrive extends SubsystemBase {
                         .stream(modules)
                         .map(SwerveModule::getPosition)
                         .toArray(SwerveModulePosition[]::new));
+        resetHeading();
     }
 
     public void drive(ChassisSpeeds speeds) {
+        speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(gyro.getYaw().getValue()));
         this.speeds = speeds;
-        var robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(gyro.getYaw().getValue()));
         var states = kinematics.toSwerveModuleStates(speeds);
         for (var i = 0; i < 4; i++) {
             modules[i].drive(states[i]);
         }
+    }
+
+    public void resetHeading() {
+        gyro.reset();
     }
 
     public GyroAngles getAngles() {
