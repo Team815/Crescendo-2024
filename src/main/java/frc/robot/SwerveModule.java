@@ -82,7 +82,7 @@ public class SwerveModule {
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
                 linearMotor.getEncoder().getPosition(),
-                Rotation2d.fromDegrees(angleSensor.getAbsolutePosition().getValue()));
+                Rotation2d.fromRotations(angleSensor.getAbsolutePosition().getValue()));
     }
 
     private static void setMaxAcceleration(CANSparkMax motor, double maxAcceleration) {

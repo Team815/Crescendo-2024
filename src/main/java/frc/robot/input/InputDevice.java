@@ -11,4 +11,5 @@ public interface InputDevice {
 
     Trigger resetHeading();
     Trigger centerOnNote();
+    Trigger test();
 }

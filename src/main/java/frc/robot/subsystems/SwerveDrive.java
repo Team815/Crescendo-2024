@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -37,6 +38,16 @@ public class SwerveDrive extends SubsystemBase {
         resetHeading();
     }
 
+    @Override
+    public void periodic() {
+        odometry.update(
+                gyro.getRotation2d(),
+                Arrays
+                        .stream(modules)
+                        .map(SwerveModule::getPosition)
+                        .toArray(SwerveModulePosition[]::new));
+    }
+
     public void drive(ChassisSpeeds speeds) {
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(gyro.getYaw().getValue()));
         this.speeds = speeds;
@@ -50,7 +61,11 @@ public class SwerveDrive extends SubsystemBase {
         gyro.reset();
     }
 
-    public GyroAngles getAngles() {
-        return new GyroAngles(gyro.getPitch().getValue(), gyro.getRoll().getValue(), gyro.getYaw().getValue());
+    public double getYaw() {
+        return gyro.getYaw().getValue();
+    }
+
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
     }
 }

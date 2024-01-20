@@ -34,4 +34,9 @@ public class XboxController extends CommandXboxController implements InputDevice
     public Trigger centerOnNote() {
         return a();
     }
+
+    @Override
+    public Trigger test() {
+        return b();
+    }
 }

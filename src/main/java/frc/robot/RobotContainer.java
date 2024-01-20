@@ -7,7 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.CenterOnNote;
+import frc.robot.commands.CenterOnTarget;
 import frc.robot.commands.SimpleDrive;
 import frc.robot.input.InputDevice;
 import frc.robot.input.XboxController;
@@ -16,6 +16,7 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
     private final InputDevice controller = new XboxController();
     private final Limelight noteCamera = new Limelight("limelight-note");
+    private final Limelight aprilTagCamera = new Limelight("limelight-tags");
     private final SwerveDrive drive;
 
     public RobotContainer() {
@@ -34,7 +35,7 @@ public class RobotContainer {
         final double frontLeftAngularOffset = 0.271d;
         final double frontRightAngularOffset = 0.515d;
         final double backLeftAngularOffset = 0.47d;
-        final double backRightAngularOffset = 0.748d;
+        final double backRightAngularOffset = 0.58d;
 
         // The max frame perimeter length is 120 in. For a square chassis,
         // each side would be 30 in. For safety, our chassis sides are 29 in.
@@ -95,11 +96,13 @@ public class RobotContainer {
 
         controller.resetHeading().onTrue(Commands.runOnce(drive::resetHeading, drive));
 
-        controller.centerOnNote().whileTrue(new CenterOnNote(
+        controller.centerOnNote().whileTrue(new CenterOnTarget(
                 drive,
                 controller::getForwardVelocity,
                 controller::getSidewaysVelocity,
                 noteCamera::getX));
+
+        controller.test().whileTrue(Commands.run(() -> System.out.println(drive.getPose())));
     }
 
     public Command getAutonomousCommand() {

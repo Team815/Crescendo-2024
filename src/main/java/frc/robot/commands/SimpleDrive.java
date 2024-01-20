@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.AccelerationModulator;
+import frc.robot.AngleCorrectionModulator;
 import frc.robot.subsystems.SwerveDrive;
 
 import java.util.function.DoubleSupplier;
@@ -12,6 +13,7 @@ public class SimpleDrive extends Command {
     private final DoubleSupplier forwardVelocity;
     private final DoubleSupplier sidewaysVelocity;
     private final DoubleSupplier angularVelocity;
+    private final AngleCorrectionModulator angleCorrector;
     private final AccelerationModulator accelerator = new AccelerationModulator(0.01d, 0.01d, 0.01d);
 
     public SimpleDrive(
@@ -23,6 +25,7 @@ public class SimpleDrive extends Command {
         this.forwardVelocity = forwardVelocity;
         this.sidewaysVelocity = sidewaysVelocity;
         this.angularVelocity = angularVelocity;
+        angleCorrector = new AngleCorrectionModulator(drive::getYaw);
         addRequirements(drive);
     }
 
@@ -32,7 +35,7 @@ public class SimpleDrive extends Command {
                 forwardVelocity.getAsDouble(),
                 sidewaysVelocity.getAsDouble(),
                 angularVelocity.getAsDouble());
-        //speeds = accelerator.modulate(speeds);
+        speeds = angleCorrector.modulate(speeds);
         drive.drive(speeds);
     }
 }
