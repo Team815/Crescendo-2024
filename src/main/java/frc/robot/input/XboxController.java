@@ -32,7 +32,12 @@ public class XboxController extends CommandXboxController implements InputDevice
 
     @Override
     public Trigger centerOnNote() {
-        return a();
+        return rightBumper();
+    }
+
+    @Override
+    public Trigger centerOnAprilTag() {
+        return leftBumper();
     }
 
     @Override

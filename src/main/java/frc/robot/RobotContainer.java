@@ -102,6 +102,12 @@ public class RobotContainer {
                 controller::getSidewaysVelocity,
                 noteCamera::getX));
 
+        controller.centerOnAprilTag().whileTrue(new CenterOnTarget(
+                drive,
+                controller::getForwardVelocity,
+                controller::getSidewaysVelocity,
+                aprilTagCamera::getX));
+
         controller.test().whileTrue(Commands.run(() -> System.out.println(drive.getPose())));
     }
 
