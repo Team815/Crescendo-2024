@@ -84,6 +84,7 @@ public class RobotContainer {
                 moduleBackLeft,
                 moduleBackRight);
 
+        Dashboard.createVelocityLayout("Teleoperated", 1, 1, drive::getSpeeds);
         configureBindings();
     }
 
