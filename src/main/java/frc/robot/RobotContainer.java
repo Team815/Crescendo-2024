@@ -5,9 +5,12 @@
 package frc.robot;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.CenterOnTarget;
+import frc.robot.commands.DriveTo;
 import frc.robot.commands.SimpleDrive;
 import frc.robot.input.InputDevice;
 import frc.robot.input.XboxController;
@@ -16,7 +19,7 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
     private final InputDevice controller = new XboxController();
     private final Limelight noteCamera = new Limelight("limelight-note");
-    private final Limelight aprilTagCamera = new Limelight("limelight-tags");
+    private final AprilTagLimelight aprilTagCamera = new AprilTagLimelight("limelight-tags");
     private final SwerveDrive drive;
 
     public RobotContainer() {
@@ -113,6 +116,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return Commands.none();
+        return new DriveTo(drive, new Pose2d(20, 10, Rotation2d.fromDegrees(180)));
     }
 }

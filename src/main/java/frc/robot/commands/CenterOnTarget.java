@@ -14,7 +14,6 @@ public class CenterOnTarget extends Command {
     private final DoubleSupplier sidewaysVelocity;
     private final DoubleSupplier targetOffset;
     private final PIDController pid = new PIDController(0.02d, 0d, 0d);
-    private final AccelerationModulator accelerator = new AccelerationModulator(0.01d, 0.01d, 0.01d);
 
     public CenterOnTarget(
             SwerveDrive drive,
@@ -35,7 +34,6 @@ public class CenterOnTarget extends Command {
                 forwardVelocity.getAsDouble(),
                 sidewaysVelocity.getAsDouble(),
                 response);
-        //speeds = accelerator.modulate(speeds);
         drive.drive(speeds);
     }
 }
