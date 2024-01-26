@@ -9,9 +9,9 @@ public class AccelerationModulator {
     private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
 
     public AccelerationModulator(
-            double maxForwardAcceleration,
-            double maxSidewaysAcceleration,
-            double maxAngularAcceleration) {
+        double maxForwardAcceleration,
+        double maxSidewaysAcceleration,
+        double maxAngularAcceleration) {
         this.maxForwardAcceleration = maxForwardAcceleration;
         this.maxSidewaysAcceleration = maxSidewaysAcceleration;
         this.maxAngularAcceleration = maxAngularAcceleration;
@@ -19,9 +19,9 @@ public class AccelerationModulator {
 
     public ChassisSpeeds modulate(ChassisSpeeds targetSpeeds) {
         var speeds = new ChassisSpeeds(
-                limit(previousSpeeds.vxMetersPerSecond, targetSpeeds.vxMetersPerSecond, maxForwardAcceleration),
-                limit(previousSpeeds.vyMetersPerSecond, targetSpeeds.vyMetersPerSecond, maxSidewaysAcceleration),
-                limit(previousSpeeds.omegaRadiansPerSecond, targetSpeeds.omegaRadiansPerSecond, maxAngularAcceleration)
+            limit(previousSpeeds.vxMetersPerSecond, targetSpeeds.vxMetersPerSecond, maxForwardAcceleration),
+            limit(previousSpeeds.vyMetersPerSecond, targetSpeeds.vyMetersPerSecond, maxSidewaysAcceleration),
+            limit(previousSpeeds.omegaRadiansPerSecond, targetSpeeds.omegaRadiansPerSecond, maxAngularAcceleration)
         );
         previousSpeeds = speeds;
         return speeds;

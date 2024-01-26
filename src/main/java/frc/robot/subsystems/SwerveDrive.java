@@ -27,16 +27,16 @@ public class SwerveDrive extends SubsystemBase {
         this.gyro = gyro;
         this.modules = module;
         kinematics = new SwerveDriveKinematics(Arrays
-                .stream(modules)
-                .map(SwerveModule::getTranslation)
-                .toArray(Translation2d[]::new));
+            .stream(modules)
+            .map(SwerveModule::getTranslation)
+            .toArray(Translation2d[]::new));
         odometry = new SwerveDriveOdometry(
-                kinematics,
-                Rotation2d.fromDegrees(gyro.getYaw().getValue()),
-                Arrays
-                        .stream(modules)
-                        .map(SwerveModule::getPosition)
-                        .toArray(SwerveModulePosition[]::new));
+            kinematics,
+            Rotation2d.fromDegrees(gyro.getYaw().getValue()),
+            Arrays
+                .stream(modules)
+                .map(SwerveModule::getPosition)
+                .toArray(SwerveModulePosition[]::new));
         angleCorrector = new AngleCorrectionModulator(this::getYaw);
         resetHeading();
     }
@@ -44,11 +44,11 @@ public class SwerveDrive extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(
-                gyro.getRotation2d(),
-                Arrays
-                        .stream(modules)
-                        .map(SwerveModule::getPosition)
-                        .toArray(SwerveModulePosition[]::new));
+            gyro.getRotation2d(),
+            Arrays
+                .stream(modules)
+                .map(SwerveModule::getPosition)
+                .toArray(SwerveModulePosition[]::new));
     }
 
     public void drive(ChassisSpeeds speeds) {

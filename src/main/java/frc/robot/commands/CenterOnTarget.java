@@ -16,10 +16,10 @@ public class CenterOnTarget extends Command {
     private final PIDController pid = new PIDController(0.02d, 0d, 0d);
 
     public CenterOnTarget(
-            SwerveDrive drive,
-            DoubleSupplier forwardVelocity,
-            DoubleSupplier sidewaysVelocity,
-            DoubleSupplier targetOffset) {
+        SwerveDrive drive,
+        DoubleSupplier forwardVelocity,
+        DoubleSupplier sidewaysVelocity,
+        DoubleSupplier targetOffset) {
         this.drive = drive;
         this.forwardVelocity = forwardVelocity;
         this.sidewaysVelocity = sidewaysVelocity;
@@ -31,9 +31,9 @@ public class CenterOnTarget extends Command {
     public void execute() {
         var response = pid.calculate(targetOffset.getAsDouble());
         var speeds = new ChassisSpeeds(
-                forwardVelocity.getAsDouble(),
-                sidewaysVelocity.getAsDouble(),
-                response);
+            forwardVelocity.getAsDouble(),
+            sidewaysVelocity.getAsDouble(),
+            response);
         drive.drive(speeds);
     }
 }

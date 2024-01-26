@@ -35,9 +35,9 @@ public class AngleCorrectionModulator {
         previousAngle = currentAngle;
         previousAngularVelocity = speeds.omegaRadiansPerSecond;
         return new ChassisSpeeds(
-                speeds.vxMetersPerSecond,
-                speeds.vyMetersPerSecond,
-                angularCorrection
+            speeds.vxMetersPerSecond,
+            speeds.vyMetersPerSecond,
+            angularCorrection
         );
     }
 

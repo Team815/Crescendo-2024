@@ -32,9 +32,9 @@ public class DriveTo extends Command {
         var sidewaysResponse = response * Math.cos(angle);
         System.out.println(error + " : " + forwardResponse);
         var speeds = new ChassisSpeeds(
-                MathUtil.clamp(forwardResponse, 0.1d, 0.1d),
-                MathUtil.clamp(sidewaysResponse, 0.1d, 0.1d),
-                0d
+            MathUtil.clamp(forwardResponse, 0.1d, 0.1d),
+            MathUtil.clamp(sidewaysResponse, 0.1d, 0.1d),
+            0d
         );
         drive.drive(speeds);
     }

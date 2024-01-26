@@ -28,10 +28,10 @@ public class SwerveModule {
     private final PIDController pid = new PIDController(DEFAULT_P, 0d, 0d);
 
     public SwerveModule(
-            CANSparkMax linearMotor,
-            CANSparkMax angularMotor,
-            CANcoder angleSensor,
-            Translation2d translation) {
+        CANSparkMax linearMotor,
+        CANSparkMax angularMotor,
+        CANcoder angleSensor,
+        Translation2d translation) {
         this.linearMotor = linearMotor;
         this.angularMotor = angularMotor;
         this.angleSensor = angleSensor;
@@ -40,12 +40,12 @@ public class SwerveModule {
     }
 
     public static SwerveModule fromIds(
-            int linearMotorId,
-            int angularMotorId,
-            int angleSensorId,
-            double angleOffset,
-            double x,
-            double y) {
+        int linearMotorId,
+        int angularMotorId,
+        int angleSensorId,
+        double angleOffset,
+        double x,
+        double y) {
         var linearMotor = new CANSparkMax(linearMotorId, MotorType.kBrushless);
         var angularMotor = new CANSparkMax(angularMotorId, MotorType.kBrushless);
         linearMotor.restoreFactoryDefaults();
@@ -64,8 +64,8 @@ public class SwerveModule {
     public void drive(SwerveModuleState state) {
         var angle = angleSensor.getAbsolutePosition().getValue();
         state = SwerveModuleState.optimize(
-                state,
-                Rotation2d.fromRotations(angle));
+            state,
+            Rotation2d.fromRotations(angle));
         var spinSpeed = MathUtil.clamp(state.speedMetersPerSecond, -maxLinearSpeed, maxLinearSpeed);
         linearMotor.set(spinSpeed);
 
@@ -81,8 +81,8 @@ public class SwerveModule {
 
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
-                linearMotor.getEncoder().getPosition(),
-                Rotation2d.fromRotations(angleSensor.getAbsolutePosition().getValue()));
+            linearMotor.getEncoder().getPosition(),
+            Rotation2d.fromRotations(angleSensor.getAbsolutePosition().getValue()));
     }
 
     private static void setMaxAcceleration(CANSparkMax motor, double maxAcceleration) {

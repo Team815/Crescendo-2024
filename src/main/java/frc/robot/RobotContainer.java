@@ -7,11 +7,12 @@ package frc.robot;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.CenterOnTarget;
 import frc.robot.commands.DriveTo;
-import frc.robot.commands.SimpleDrive;
 import frc.robot.input.InputDevice;
 import frc.robot.input.XboxController;
 import frc.robot.subsystems.SwerveDrive;
@@ -48,71 +49,76 @@ public class RobotContainer {
         final var halfWidth = 0.368d;
 
         var moduleFrontLeft = SwerveModule.fromIds(
-                frontLeftSpinId,
-                frontLeftRotateId,
-                frontLeftRotateSensorId,
-                frontLeftAngularOffset,
-                halfLength,
-                halfWidth
+            frontLeftSpinId,
+            frontLeftRotateId,
+            frontLeftRotateSensorId,
+            frontLeftAngularOffset,
+            halfLength,
+            halfWidth
         );
 
         var moduleFrontRight = SwerveModule.fromIds(
-                frontRightSpinId,
-                frontRightRotateId,
-                frontRightRotateSensorId,
-                frontRightAngularOffset,
-                halfLength,
-                -halfWidth);
+            frontRightSpinId,
+            frontRightRotateId,
+            frontRightRotateSensorId,
+            frontRightAngularOffset,
+            halfLength,
+            -halfWidth);
 
         var moduleBackLeft = SwerveModule.fromIds(
-                backLeftSpinId,
-                backLeftRotateId,
-                backLeftRotateSensorId,
-                backLeftAngularOffset,
-                -halfLength,
-                halfWidth);
+            backLeftSpinId,
+            backLeftRotateId,
+            backLeftRotateSensorId,
+            backLeftAngularOffset,
+            -halfLength,
+            halfWidth);
 
         var moduleBackRight = SwerveModule.fromIds(
-                backRightSpinId,
-                backRightRotateId,
-                backRightRotateSensorId,
-                backRightAngularOffset,
-                -halfLength,
-                -halfWidth);
+            backRightSpinId,
+            backRightRotateId,
+            backRightRotateSensorId,
+            backRightAngularOffset,
+            -halfLength,
+            -halfWidth);
 
         drive = new SwerveDrive(
-                new Pigeon2(0),
-                moduleFrontLeft,
-                moduleFrontRight,
-                moduleBackLeft,
-                moduleBackRight);
+            new Pigeon2(0),
+            moduleFrontLeft,
+            moduleFrontRight,
+            moduleBackLeft,
+            moduleBackRight);
 
-        Dashboard.createVelocityLayout("Teleoperated", 1, 1, drive::getSpeeds);
+        Dashboard.addDouble("Velocity/Forward Velocity", () -> drive.getSpeeds().vxMetersPerSecond);
+        Dashboard.addDouble("Velocity/Sideways Velocity", () -> drive.getSpeeds().vyMetersPerSecond);
+        Dashboard.addDouble("Velocity/Angular Velocity", () -> drive.getSpeeds().omegaRadiansPerSecond);
+
         configureBindings();
     }
 
     private void configureBindings() {
-        drive.setDefaultCommand(new SimpleDrive(
-                drive,
-                controller::getForwardVelocity,
-                controller::getSidewaysVelocity,
-                controller::getAngularVelocity));
+        drive.setDefaultCommand(Commands.run(
+            () -> drive.drive(new ChassisSpeeds(
+                controller.getForwardVelocity(),
+                controller.getSidewaysVelocity(),
+                controller.getAngularVelocity())),
+            drive));
 
         controller.resetHeading().onTrue(Commands.runOnce(drive::resetHeading, drive));
 
         controller.centerOnNote().whileTrue(new CenterOnTarget(
-                drive,
-                controller::getForwardVelocity,
-                controller::getSidewaysVelocity,
-                noteCamera::getX));
+            drive,
+            controller::getForwardVelocity,
+            controller::getSidewaysVelocity,
+            noteCamera::getX));
 
         controller.centerOnAprilTag().whileTrue(new CenterOnTarget(
-                drive,
-                controller::getForwardVelocity,
-                controller::getSidewaysVelocity,
-                aprilTagCamera::getX));
+            drive,
+            controller::getForwardVelocity,
+            controller::getSidewaysVelocity,
+            aprilTagCamera::getX));
 
         controller.test().whileTrue(Commands.run(() -> System.out.println(drive.getPose())));
+        CommandScheduler.getInstance().schedule(Commands.run(Dashboard::update));
     }
 
     public Command getAutonomousCommand() {
