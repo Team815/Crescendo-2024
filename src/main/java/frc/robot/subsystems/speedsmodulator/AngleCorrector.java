@@ -1,18 +1,18 @@
-package frc.robot;
+package frc.robot.subsystems.speedsmodulator;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 import java.util.function.DoubleSupplier;
 
-public class AngleCorrectionModulator {
+public class AngleCorrector implements SpeedsModulator {
     private final DoubleSupplier robotAngle;
     private final PIDController pid = new PIDController(0.01d, 0d, 0d);
     private double previousAngle = 0d;
     private double previousAngularVelocity = 0d;
     private boolean settling = false;
 
-    public AngleCorrectionModulator(DoubleSupplier robotAngle) {
+    public AngleCorrector(DoubleSupplier robotAngle) {
         this.robotAngle = robotAngle;
     }
 
@@ -26,7 +26,7 @@ public class AngleCorrectionModulator {
             pid.setSetpoint(currentAngle);
         } else if (settling) {
             pid.setSetpoint(currentAngle);
-            if (Math.abs(currentAngle - previousAngle) < 1d) {
+            if (Math.abs(currentAngle - previousAngle) < 0.5d) {
                 settling = false;
             }
         } else {

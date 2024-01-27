@@ -16,6 +16,8 @@ import frc.robot.commands.DriveTo;
 import frc.robot.input.InputDevice;
 import frc.robot.input.XboxController;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.speedsmodulator.AccelerationLimiter;
+import frc.robot.subsystems.speedsmodulator.AngleCorrector;
 
 public class RobotContainer {
     private final InputDevice controller = new XboxController();
@@ -83,19 +85,29 @@ public class RobotContainer {
 
         drive = new SwerveDrive(
             new Pigeon2(0),
-            moduleFrontLeft,
-            moduleFrontRight,
-            moduleBackLeft,
-            moduleBackRight);
+            new SwerveModule[]{
+                moduleFrontLeft,
+                moduleFrontRight,
+                moduleBackLeft,
+                moduleBackRight});
 
-        Dashboard.addDouble("Velocity/Forward Velocity", () -> drive.getSpeeds().vxMetersPerSecond);
-        Dashboard.addDouble("Velocity/Sideways Velocity", () -> drive.getSpeeds().vyMetersPerSecond);
-        Dashboard.addDouble("Velocity/Angular Velocity", () -> drive.getSpeeds().omegaRadiansPerSecond);
+        var angleCorrector = new AngleCorrector(drive::getYaw);
+        drive.addModulator(angleCorrector);
+        var accelerationLimiter = new AccelerationLimiter(0.01d, 0.01d);
+        Dashboard.AddDoubleEntry("Speeds Modulator", "Max Linear Acceleration", accelerationLimiter::setMaxLinearAcceleration);
+        drive.addModulator(accelerationLimiter);
 
-        configureBindings();
+        Dashboard.PublishDouble("Velocity", "Forward", () -> drive.getSpeeds().vxMetersPerSecond);
+        Dashboard.PublishDouble("Velocity", "Sideways", () -> drive.getSpeeds().vyMetersPerSecond);
+        Dashboard.PublishDouble("Velocity", "Angular", () -> drive.getSpeeds().omegaRadiansPerSecond);
+        Dashboard.PublishDouble("Pose", "Forward", () -> drive.getPose().getX());
+        Dashboard.PublishDouble("Pose", "Sideways", () -> drive.getPose().getY());
+        Dashboard.PublishDouble("Pose", "Angle", () -> drive.getPose().getRotation().getDegrees());
+
+        configureBindings(angleCorrector);
     }
 
-    private void configureBindings() {
+    private void configureBindings(AngleCorrector angleCorrector) {
         drive.setDefaultCommand(Commands.run(
             () -> drive.drive(new ChassisSpeeds(
                 controller.getForwardVelocity(),
@@ -103,7 +115,10 @@ public class RobotContainer {
                 controller.getAngularVelocity())),
             drive));
 
-        controller.resetHeading().onTrue(Commands.runOnce(drive::resetHeading, drive));
+        controller.resetHeading().onTrue(Commands.runOnce(() -> {
+            drive.resetHeading();
+            angleCorrector.reset();
+        }, drive));
 
         controller.centerOnNote().whileTrue(new CenterOnTarget(
             drive,
@@ -118,7 +133,7 @@ public class RobotContainer {
             aprilTagCamera::getX));
 
         controller.test().whileTrue(Commands.run(() -> System.out.println(drive.getPose())));
-        CommandScheduler.getInstance().schedule(Commands.run(Dashboard::update));
+        CommandScheduler.getInstance().schedule(Commands.run(() -> {}));
     }
 
     public Command getAutonomousCommand() {

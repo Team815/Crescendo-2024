@@ -1,14 +1,18 @@
-package frc.robot;
+package frc.robot.subsystems.speedsmodulator;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
-public class AccelerationModulator {
-    private final double maxForwardAcceleration;
-    private final double maxSidewaysAcceleration;
-    private final double maxAngularAcceleration;
+public class AccelerationLimiter implements SpeedsModulator {
+    private double maxForwardAcceleration;
+    private double maxSidewaysAcceleration;
+    private double maxAngularAcceleration;
     private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
 
-    public AccelerationModulator(
+    public AccelerationLimiter(double maxLinearAcceleration, double maxAngularAcceleration) {
+        this(maxLinearAcceleration, maxLinearAcceleration, maxAngularAcceleration);
+    }
+
+    public AccelerationLimiter(
         double maxForwardAcceleration,
         double maxSidewaysAcceleration,
         double maxAngularAcceleration) {
@@ -18,6 +22,7 @@ public class AccelerationModulator {
     }
 
     public ChassisSpeeds modulate(ChassisSpeeds targetSpeeds) {
+        System.out.println(maxForwardAcceleration);
         var speeds = new ChassisSpeeds(
             limit(previousSpeeds.vxMetersPerSecond, targetSpeeds.vxMetersPerSecond, maxForwardAcceleration),
             limit(previousSpeeds.vyMetersPerSecond, targetSpeeds.vyMetersPerSecond, maxSidewaysAcceleration),
@@ -25,6 +30,11 @@ public class AccelerationModulator {
         );
         previousSpeeds = speeds;
         return speeds;
+    }
+
+    public void setMaxLinearAcceleration(double maxLinearAcceleration) {
+        maxForwardAcceleration = maxLinearAcceleration;
+        maxSidewaysAcceleration = maxLinearAcceleration;
     }
 
     private static double limit(double fromVelocity, double toVelocity, double maxAcceleration) {
