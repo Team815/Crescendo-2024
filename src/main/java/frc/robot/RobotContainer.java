@@ -137,6 +137,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new DriveTo(drive, new Pose2d(20, 10, Rotation2d.fromDegrees(180)));
+        return new DriveTo(drive, new Pose2d(-20, -10, Rotation2d.fromDegrees(180)));
     }
 }

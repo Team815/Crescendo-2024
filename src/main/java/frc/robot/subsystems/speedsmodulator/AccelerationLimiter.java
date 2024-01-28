@@ -22,7 +22,6 @@ public class AccelerationLimiter implements SpeedsModulator {
     }
 
     public ChassisSpeeds modulate(ChassisSpeeds targetSpeeds) {
-        System.out.println(maxForwardAcceleration);
         var speeds = new ChassisSpeeds(
             limit(previousSpeeds.vxMetersPerSecond, targetSpeeds.vxMetersPerSecond, maxForwardAcceleration),
             limit(previousSpeeds.vyMetersPerSecond, targetSpeeds.vyMetersPerSecond, maxSidewaysAcceleration),
