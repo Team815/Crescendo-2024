@@ -41,7 +41,7 @@ public class RobotContainer {
         final double frontLeftAngularOffset = 0.271d;
         final double frontRightAngularOffset = 0.515d;
         final double backLeftAngularOffset = 0.47d;
-        final double backRightAngularOffset = 0.58d;
+        final double backRightAngularOffset = 0.68d;
 
         // The max frame perimeter length is 120 in. For a square chassis,
         // each side would be 30 in. For safety, our chassis sides are 29 in.
