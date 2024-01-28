@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -132,11 +133,11 @@ public class RobotContainer {
             controller::getSidewaysVelocity,
             aprilTagCamera::getX));
 
-        controller.test().whileTrue(Commands.run(() -> System.out.println(drive.getPose())));
+        controller.test().whileTrue(Commands.run(() -> drive.drive(new ChassisSpeeds(1, 0, 0))));
         CommandScheduler.getInstance().schedule(Commands.run(() -> {}));
     }
 
     public Command getAutonomousCommand() {
-        return new DriveTo(drive, new Pose2d(-20, -10, Rotation2d.fromDegrees(180)));
+        return new PathPlannerAuto("Loop");
     }
 }
