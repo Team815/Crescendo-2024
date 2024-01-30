@@ -50,7 +50,7 @@ public class SwerveModule {
         var angularMotor = new CANSparkMax(angularMotorId, MotorType.kBrushless);
         linearMotor.restoreFactoryDefaults();
         angularMotor.restoreFactoryDefaults();
-        linearMotor.getEncoder().setPositionConversionFactor(0.042d);
+        linearMotor.getEncoder().setPositionConversionFactor(0.046d);
         setMaxAcceleration(linearMotor, DEFAULT_MAX_LINEAR_ACCELERATION);
         setMaxAcceleration(angularMotor, DEFAULT_MAX_ANGULAR_ACCELERATION);
         var angleSensor = new CANcoder(angleSensorId);

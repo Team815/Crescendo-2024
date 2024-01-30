@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.CenterOnTarget;
 import frc.robot.commands.DriveTo;
 import frc.robot.input.InputDevice;
@@ -43,6 +45,7 @@ public class RobotContainer {
         final double frontRightAngularOffset = 0.515d;
         final double backLeftAngularOffset = 0.47d;
         final double backRightAngularOffset = 0.68d;
+        final double maxDriveSpeed = 4.4d;
 
         // The max frame perimeter length is 120 in. For a square chassis,
         // each side would be 30 in. For safety, our chassis sides are 29 in.
@@ -85,6 +88,7 @@ public class RobotContainer {
             -halfWidth);
 
         drive = new SwerveDrive(
+            maxDriveSpeed,
             new Pigeon2(0),
             new SwerveModule[]{
                 moduleFrontLeft,
@@ -104,6 +108,8 @@ public class RobotContainer {
         Dashboard.PublishDouble("Pose", "Forward", () -> drive.getPose().getX());
         Dashboard.PublishDouble("Pose", "Sideways", () -> drive.getPose().getY());
         Dashboard.PublishDouble("Pose", "Angle", () -> drive.getPose().getRotation().getDegrees());
+
+        NamedCommands.registerCommand("Print", new PrintCommand("Hello, World!"));
 
         configureBindings(angleCorrector);
     }
@@ -138,6 +144,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Loop");
+        return new PathPlannerAuto("Pickup And Shoot 3 Notes");
     }
 }

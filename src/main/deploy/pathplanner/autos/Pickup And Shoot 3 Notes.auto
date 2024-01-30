@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4,
+      "y": 5.55
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker To Middle Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Middle Note To Speaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker To Top Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top Note To Speaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker To Bottom Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bottom Note To Speaker"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

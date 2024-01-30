@@ -24,17 +24,23 @@ import java.util.stream.Collectors;
 
 public class SwerveDrive extends SubsystemBase {
     private ChassisSpeeds speeds = new ChassisSpeeds();
+    private final double maxSpeed;
     private final Pigeon2 gyro;
     private final SwerveModule[] modules;
     private final SwerveDriveKinematics kinematics;
     private final SwerveDriveOdometry odometry;
     private final List<SpeedsModulator> modulators;
 
-    public SwerveDrive(Pigeon2 gyro, SwerveModule[] module, SpeedsModulator... modulators) {
+    public SwerveDrive(
+        double maxSpeed,
+        Pigeon2 gyro,
+        SwerveModule[] modules,
+        SpeedsModulator... modulators) {
+        this.maxSpeed = maxSpeed;
         this.gyro = gyro;
-        this.modules = module;
+        this.modules = modules;
         kinematics = new SwerveDriveKinematics(Arrays
-            .stream(modules)
+            .stream(this.modules)
             .map(SwerveModule::getTranslation)
             .toArray(Translation2d[]::new));
         odometry = new SwerveDriveOdometry(
@@ -56,10 +62,10 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void drive(ChassisSpeeds speeds) {
-//        for (var modulator : modulators) {
-//            speeds = modulator.modulate(speeds);
-//        }
-        driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
+        for (var modulator : modulators) {
+            speeds = modulator.modulate(speeds);
+        }
+        driveRobotRelativePercent(ChassisSpeeds.fromFieldRelativeSpeeds(
             speeds,
             Rotation2d.fromDegrees(gyro.getYaw().getValue())));
     }
@@ -93,12 +99,12 @@ public class SwerveDrive extends SubsystemBase {
             this::getPose, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            this::driveRobotRelativeVelocity, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                new PIDConstants(0.02d, 0d, 0d), // Translation PID constants
-                new PIDConstants(0.02d, 0d, 0d), // Rotation PID constants
-                4d, // Max module speed, in m/s
-                0.4d, // Drive base radius in meters. Distance from robot center to furthest module.
+                new PIDConstants(5d, 0d, 0d), // Translation PID constants
+                new PIDConstants(5d, 0d, 0d), // Rotation PID constants
+                4.4d, // Max module speed, in m/s
+                0.43d, // Drive base radius in meters. Distance from robot center to furthest module.
                 new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
             () -> {
@@ -107,18 +113,19 @@ public class SwerveDrive extends SubsystemBase {
                 // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
                 var alliance = DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
+                return alliance.filter(value -> value == DriverStation.Alliance.Red).isPresent();
             },
             this // Reference to this subsystem to set requirements
         );
     }
 
-    private void driveRobotRelative(ChassisSpeeds speeds) {
-        this.speeds = speeds;
-        var states = kinematics.toSwerveModuleStates(speeds.div(4));
+    private void driveRobotRelativeVelocity(ChassisSpeeds speeds) {
+        driveRobotRelativePercent(speeds.div(maxSpeed));
+    }
+
+    private void driveRobotRelativePercent(ChassisSpeeds speeds) {
+        this.speeds = speeds.times(maxSpeed);
+        var states = kinematics.toSwerveModuleStates(speeds);
         for (var i = 0; i < 4; i++) {
             modules[i].drive(states[i]);
         }
