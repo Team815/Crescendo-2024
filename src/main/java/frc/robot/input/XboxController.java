@@ -41,6 +41,11 @@ public class XboxController extends CommandXboxController implements InputDevice
     }
 
     @Override
+    public Trigger pickup() {
+        return x();
+    }
+
+    @Override
     public Trigger test() {
         return b();
     }

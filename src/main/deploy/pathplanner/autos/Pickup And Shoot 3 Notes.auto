@@ -2,39 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
-      "y": 5.55
+      "x": 1.25,
+      "y": 4.65
     },
-    "rotation": 0
+    "rotation": -22.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Speaker To Middle Note"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Middle Note To Speaker"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Speaker To Top Note"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Top Note To Speaker"
-          }
-        },
         {
           "type": "path",
           "data": {
@@ -44,7 +20,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Bottom Note To Speaker"
+            "pathName": "Bottom Note To Middle Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate To Speaker From Middle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go Out"
           }
         }
       ]
