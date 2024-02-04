@@ -5,16 +5,28 @@
       "x": 1.25,
       "y": 4.65
     },
-    "rotation": -22.0
+    "rotation": 155.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Speaker To Bottom Note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pickup"
           }
         },
         {
@@ -24,15 +36,51 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pickup"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Rotate To Speaker From Middle"
+            "pathName": "Middle Note To Top Note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pickup"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Go Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pickup"
           }
         }
       ]

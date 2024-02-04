@@ -113,7 +113,8 @@ public class RobotContainer {
         Dashboard.PublishDouble("Pose", "Sideways", () -> drive.getPose().getY());
         Dashboard.PublishDouble("Pose", "Angle", () -> drive.getPose().getRotation().getDegrees());
 
-        NamedCommands.registerCommand("Print", new PrintCommand("Hello, World!"));
+        NamedCommands.registerCommand("Pickup", new PrintCommand("Picking up"));
+        NamedCommands.registerCommand("Shoot", new PrintCommand("Shooting"));
 
         configureBindings(angleCorrector);
     }
