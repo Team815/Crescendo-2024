@@ -145,7 +145,7 @@ public class RobotContainer {
             aprilTagCamera::getX));
 
         controller.pickup().whileTrue(Commands.startEnd(
-            () -> pickup.run(0.2d),
+            () -> pickup.run(0.3d),
             () -> pickup.run(0d)));
 
         controller.test().whileTrue(Commands.run(() -> drive.drive(new ChassisSpeeds(0.05, 0, 0))));
