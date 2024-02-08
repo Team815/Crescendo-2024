@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.CenterOnTarget;
 import frc.robot.input.InputDevice;
 import frc.robot.input.XboxController;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.speedsmodulator.AccelerationLimiter;
@@ -26,8 +27,10 @@ public class RobotContainer {
     private final InputDevice controller = new XboxController();
     private final Limelight noteCamera = new Limelight("limelight-note");
     private final AprilTagLimelight aprilTagCamera = new AprilTagLimelight("limelight-tags");
+    private Command resetHeadingCommand;
     private final SwerveDrive drive;
     private final Pickup pickup;
+    private final Arm arm;
 
     public RobotContainer() {
         final int frontLeftSpinId = 1;
@@ -39,6 +42,7 @@ public class RobotContainer {
         final int backRightSpinId = 4;
         final int backRightRotateId = 3;
         final int pickupId = 9;
+        final int armId = 10;
         final int frontLeftRotateSensorId = 1;
         final int frontRightRotateSensorId = 2;
         final int backLeftRotateSensorId = 3;
@@ -106,6 +110,9 @@ public class RobotContainer {
 
         pickup = new Pickup(new CANSparkMax(pickupId, CANSparkLowLevel.MotorType.kBrushless));
 
+        //arm = new Arm(new CanSparkMax815(armId, CANSparkLowLevel.MotorType.kBrushless));
+        arm = new Arm(new DummyMotorController());
+
         Dashboard.PublishDouble("Velocity", "Forward", () -> drive.getSpeeds().vxMetersPerSecond);
         Dashboard.PublishDouble("Velocity", "Sideways", () -> drive.getSpeeds().vyMetersPerSecond);
         Dashboard.PublishDouble("Velocity", "Angular", () -> drive.getSpeeds().omegaRadiansPerSecond);
@@ -113,7 +120,7 @@ public class RobotContainer {
         Dashboard.PublishDouble("Pose", "Sideways", () -> drive.getPose().getY());
         Dashboard.PublishDouble("Pose", "Angle", () -> drive.getPose().getRotation().getDegrees());
 
-        NamedCommands.registerCommand("Pickup", new PrintCommand("Picking up"));
+        NamedCommands.registerCommand("Pickup", Commands.runOnce(() -> pickup.run(0.4d)));
         NamedCommands.registerCommand("Shoot", new PrintCommand("Shooting"));
 
         configureBindings(angleCorrector);
@@ -127,10 +134,12 @@ public class RobotContainer {
                 controller.getAngularVelocity())),
             drive));
 
-        controller.resetHeading().onTrue(Commands.runOnce(() -> {
+        resetHeadingCommand = Commands.runOnce(() -> {
             drive.resetHeading();
             angleCorrector.reset();
-        }, drive));
+        }, drive);
+
+        controller.resetHeading().onTrue(resetHeadingCommand);
 
         controller.centerOnNote().whileTrue(new CenterOnTarget(
             drive,
@@ -148,12 +157,16 @@ public class RobotContainer {
             () -> pickup.run(0.3d),
             () -> pickup.run(0d)));
 
-        controller.test().whileTrue(Commands.run(() -> drive.drive(new ChassisSpeeds(0.05, 0, 0))));
-        CommandScheduler.getInstance().schedule(Commands.run(() -> {
-        }));
+        controller.test().whileTrue(Commands.startEnd(
+            () -> arm.run(0.1d),
+            () -> arm.run(0d)));
     }
 
     public Command getAutonomousCommand() {
         return new PathPlannerAuto("Pickup And Shoot 3 Notes");
+    }
+
+    public Command getTeleopInitCommand() {
+        return resetHeadingCommand;
     }
 }

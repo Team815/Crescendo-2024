@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.25,
-      "y": 4.65
+      "x": 0.75,
+      "y": 4.4
     },
-    "rotation": 155.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Pickup"
           }
         },
         {
@@ -24,33 +24,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Pickup"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Bottom Note To Middle Note"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Pickup"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "pathName": "Drive Over Middle Note"
           }
         },
         {
@@ -60,27 +42,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Pickup"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Go Out"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Pickup"
+            "waitTime": 20.0
           }
         }
       ]

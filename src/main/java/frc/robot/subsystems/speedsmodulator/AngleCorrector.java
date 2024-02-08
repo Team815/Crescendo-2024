@@ -7,7 +7,7 @@ import java.util.function.DoubleSupplier;
 
 public class AngleCorrector implements SpeedsModulator {
     private final DoubleSupplier robotAngle;
-    private final PIDController pid = new PIDController(0.01d, 0d, 0d);
+    private final PIDController pid = new PIDController(0.03d, 0d, 0d);
     private double previousAngle = 0d;
     private double previousAngularVelocity = 0d;
     private boolean settling = false;
