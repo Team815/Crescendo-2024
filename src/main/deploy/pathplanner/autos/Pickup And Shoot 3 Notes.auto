@@ -12,39 +12,47 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Pickup"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Speaker To Bottom Note"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Bottom Note To Middle Note"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Drive Over Middle Note"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Middle Note To Top Note"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 20.0
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Speaker To Bottom Note"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Bottom Note To Middle Note"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Drive Over Middle Note"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Middle Note To Top Note"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         }
       ]

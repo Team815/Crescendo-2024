@@ -14,4 +14,5 @@ public interface InputDevice {
     Trigger centerOnAprilTag();
     Trigger pickup();
     Trigger test();
+    Trigger shoot();
 }

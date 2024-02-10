@@ -49,4 +49,9 @@ public class XboxController extends CommandXboxController implements InputDevice
     public Trigger test() {
         return b();
     }
+
+    @Override
+    public Trigger shoot() {
+        return rightBumper();
+    }
 }

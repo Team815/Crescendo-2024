@@ -50,7 +50,7 @@ public class SwerveDrive extends SubsystemBase {
         this.modulators = Arrays
             .stream(modulators)
             .collect(Collectors.toCollection(ArrayList::new));
-        resetHeading();
+        setAngle(0d);
         configureAutoBuilder();
     }
 
@@ -67,15 +67,15 @@ public class SwerveDrive extends SubsystemBase {
         }
         driveRobotRelativePercent(ChassisSpeeds.fromFieldRelativeSpeeds(
             speeds,
-            Rotation2d.fromDegrees(gyro.getYaw().getValue())));
+            getAngle()));
     }
 
-    public void resetHeading() {
-        gyro.reset();
+    public void setAngle(double heading) {
+        gyro.setYaw(heading);
     }
 
-    public double getYaw() {
-        return gyro.getYaw().getValue();
+    public Rotation2d getAngle() {
+        return gyro.getRotation2d();
     }
 
     public ChassisSpeeds getSpeeds() {
