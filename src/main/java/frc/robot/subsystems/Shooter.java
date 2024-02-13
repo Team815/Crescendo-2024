@@ -18,7 +18,7 @@ public class Shooter extends PIDSubsystem {
 
     @Override
     public void periodic() {
-        System.out.println(motor.getEncoder().getVelocity());
+        System.out.println(getVelocity());
     }
 
     @Override
@@ -29,10 +29,14 @@ public class Shooter extends PIDSubsystem {
 
     @Override
     protected double getMeasurement() {
-        return motor.getEncoder().getVelocity();
+        return getVelocity();
     }
 
     public void run(double speed) {
         setSetpoint(speed);
+    }
+
+    public double getVelocity() {
+        return motor.getEncoder().getVelocity();
     }
 }
