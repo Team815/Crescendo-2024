@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class XboxController extends CommandXboxController implements InputDevice {
     private static final double DEADBAND = 0.12d;
+
     public XboxController() {
         super(0);
     }
@@ -37,12 +38,12 @@ public class XboxController extends CommandXboxController implements InputDevice
 
     @Override
     public Trigger centerOnAprilTag() {
-        return y();
+        return rightBumper();
     }
 
     @Override
     public Trigger pickup() {
-        return x();
+        return leftTrigger();
     }
 
     @Override
@@ -52,6 +53,6 @@ public class XboxController extends CommandXboxController implements InputDevice
 
     @Override
     public Trigger shoot() {
-        return rightBumper();
+        return rightTrigger();
     }
 }

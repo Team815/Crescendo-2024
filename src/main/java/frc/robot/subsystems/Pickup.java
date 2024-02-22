@@ -13,4 +13,8 @@ public class Pickup extends SubsystemBase {
     public void run(double speed) {
         motor.set(speed);
     }
+
+    public void stop() {
+        motor.stopMotor();
+    }
 }

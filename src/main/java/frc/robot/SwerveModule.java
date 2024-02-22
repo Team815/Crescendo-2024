@@ -75,12 +75,12 @@ public class SwerveModule {
             state,
             Rotation2d.fromRotations(angle));
         var spinSpeed = MathUtil.clamp(state.speedMetersPerSecond, -maxLinearSpeed, maxLinearSpeed);
-        linearMotor.set(spinSpeed);
+        //linearMotor.set(spinSpeed);
 
         var rotation = state.angle.getRotations();
         pid.setSetpoint(rotation);
         var response = -pid.calculate(angle);
-        angularMotor.set(MathUtil.clamp(response, -maxAngularSpeed, maxAngularSpeed));
+        //angularMotor.set(MathUtil.clamp(response, -maxAngularSpeed, maxAngularSpeed));
     }
 
     public Translation2d getTranslation() {

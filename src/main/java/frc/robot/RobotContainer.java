@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.CenterOnTarget;
+import frc.robot.commands.Commander;
 import frc.robot.input.InputDevice;
 import frc.robot.input.XboxController;
 import frc.robot.subsystems.Arm;
@@ -29,6 +30,7 @@ public class RobotContainer {
     private final AprilTagLimelight aprilTagCamera = new AprilTagLimelight("limelight-tags");
     private double startingAngle;
     private Command resetHeadingCommand;
+    private final Commander commander;
     private final SwerveDrive drive;
     private final Pickup pickup;
     private final Shooter shooter;
@@ -46,6 +48,8 @@ public class RobotContainer {
         final int pickupId = 9;
         final int shooterId1 = 10;
         final int shooterId2 = 11;
+        final int armId1 = 12;
+        final int armId2 = 13;
         final int frontLeftRotateSensorId = 1;
         final int frontRightRotateSensorId = 2;
         final int backLeftRotateSensorId = 3;
@@ -111,7 +115,11 @@ public class RobotContainer {
         Dashboard.AddDoubleEntry("Speeds Modulator", "Max Linear Acceleration", accelerationLimiter::setMaxLinearAcceleration);
         drive.addModulator(accelerationLimiter);
 
+        //initialize pickup
+
         pickup = new Pickup(new CANSparkMax(pickupId, CANSparkLowLevel.MotorType.kBrushless));
+
+        //initialize shooter
 
         var shooter1 = new CANSparkMax(shooterId1, CANSparkLowLevel.MotorType.kBrushless);
         shooter1.setInverted(true);
@@ -120,23 +128,38 @@ public class RobotContainer {
             new CANSparkMax(shooterId2, CANSparkLowLevel.MotorType.kBrushless)
         );
 
-        //arm = new Arm(new CanSparkMax815(armId, CANSparkLowLevel.MotorType.kBrushless));
-        arm = new Arm(new DummyMotorController());
+        //initialize arm
 
+        arm = new Arm(
+            new CANSparkMax(armId1, CANSparkLowLevel.MotorType.kBrushless),
+            new CANSparkMax(armId2, CANSparkLowLevel.MotorType.kBrushless));
+
+        commander = new Commander(pickup, arm, shooter);
+
+        configureDashboard();
+
+        configureAutoCommands();
+
+        configureBindings(angleCorrector);
+    }
+
+    private void configureDashboard() {
         Dashboard.PublishDouble("Velocity", "Forward", () -> drive.getSpeeds().vxMetersPerSecond);
         Dashboard.PublishDouble("Velocity", "Sideways", () -> drive.getSpeeds().vyMetersPerSecond);
         Dashboard.PublishDouble("Velocity", "Angular", () -> drive.getSpeeds().omegaRadiansPerSecond);
         Dashboard.PublishDouble("Pose", "Forward", () -> drive.getPose().getX());
         Dashboard.PublishDouble("Pose", "Sideways", () -> drive.getPose().getY());
         Dashboard.PublishDouble("Pose", "Angle", () -> drive.getPose().getRotation().getDegrees());
+    }
+
+    private void configureAutoCommands() {
 
         NamedCommands.registerCommand("Pickup", Commands.startEnd(
             () -> pickup.run(0.4d),
             () -> pickup.run(0d),
             pickup));
-        NamedCommands.registerCommand("Shoot", new PrintCommand("Shooting"));
 
-        configureBindings(angleCorrector);
+        NamedCommands.registerCommand("Shoot", new PrintCommand("Shooting"));
     }
 
     private void configureBindings(AngleCorrector angleCorrector) {
@@ -171,16 +194,12 @@ public class RobotContainer {
             () -> pickup.run(0d),
             pickup));
 
-        controller.shoot().whileTrue(Commands.startEnd(
-            () -> shooter.run(2000d),
-            () -> shooter.run(0d),
-            shooter));
+        controller.shoot().whileTrue(commander.shootManual());
 
-//        controller.test().whileTrue(Commands.startEnd(
-//            () -> arm.run(0.1d),
-//            () -> arm.run(0d)));
-
-        controller.test().whileTrue(Commands.run(() -> drive.drive(new ChassisSpeeds(0.01d, 0d, 0d))));
+        controller.test().whileTrue(Commands.startEnd(
+            () -> commander.startShootingAuto().schedule(),
+            () -> commander.stopShooting().schedule()
+        ));
     }
 
     public Command getAutonomousCommand() {
