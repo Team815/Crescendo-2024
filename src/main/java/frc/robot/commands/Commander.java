@@ -30,13 +30,12 @@ public class Commander {
             arm, shooter);
     }
 
-    public Command startShootingAuto() {
-        return Commands.waitSeconds(10d)
-            .raceWith(Commands.waitUntil(() -> arm.getController().atGoal() /*&& shooter.getController().atSetpoint()*/)
-                .alongWith(Commands.runOnce(() -> {
-                    arm.setPosition(Math.toRadians(30d));
-                    shooter.run(2000d);
-                })))
+    public Command startShootingAuto(double angle, double speed) {
+        return Commands.runOnce(() -> {
+                arm.setPosition(Math.toRadians(angle));
+                shooter.run(speed);
+            }).andThen(Commands.waitSeconds(4d)
+                .raceWith(Commands.waitUntil(() -> arm.getController().atGoal() && shooter.getController().atSetpoint())))
             .andThen(() -> pickup.run(0.3d));
     }
 

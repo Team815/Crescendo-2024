@@ -55,9 +55,9 @@ public class RobotContainer {
         final int backLeftRotateSensorId = 3;
         final int backRightRotateSensorId = 4;
         final double frontLeftAngularOffset = 0.271d;
-        final double frontRightAngularOffset = 0.49d;
+        final double frontRightAngularOffset = 0.57d;
         final double backLeftAngularOffset = 0.47d;
-        final double backRightAngularOffset = 0.72d;
+        final double backRightAngularOffset = 0.18d;
         final double maxDriveSpeed = 4.4d;
 
         // The max frame perimeter length is 120 in. For a square chassis,
@@ -197,7 +197,8 @@ public class RobotContainer {
         controller.shoot().whileTrue(commander.shootManual());
 
         controller.test().whileTrue(Commands.startEnd(
-            () -> commander.startShootingAuto().schedule(),
+//            () -> commander.startShootingAuto(3d, 2250d).schedule(),
+            () -> commander.startShootingAuto(20d, 2750).schedule(),
             () -> commander.stopShooting().schedule()
         ));
     }

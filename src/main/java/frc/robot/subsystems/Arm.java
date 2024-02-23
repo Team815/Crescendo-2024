@@ -31,11 +31,6 @@ public class Arm extends ProfiledPIDSubsystem {
         feedforward = new ArmFeedforward(0d, 0.1d, 0d);
     }
 
-    @Override
-    public void periodic() {
-        super.periodic();
-    }
-
     public void setPosition(double position) {
         setGoal(position + offset);
         enable();

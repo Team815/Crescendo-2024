@@ -10,8 +10,8 @@ public class Shooter extends PIDSubsystem {
     private final SimpleMotorFeedforward feedforward;
 
     public Shooter(CANSparkBase motor, CANSparkBase follower) {
-        super(new PIDController(0.0d, 0.000004d, 0d));
-        getController().setTolerance(20);
+        super(new PIDController(0.0d, 0.00001d, 0d));
+        getController().setTolerance(50);
         this.motor = motor;
         follower.follow(this.motor);
         feedforward = new SimpleMotorFeedforward(0d, 0.000185d);
