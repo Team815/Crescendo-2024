@@ -41,7 +41,7 @@ public class AngleCorrector implements SpeedsModulator {
         );
     }
 
-    public void reset() {
-        pid.setSetpoint(0d);
+    public void reset(double angle) {
+        pid.setSetpoint(angle);
     }
 }

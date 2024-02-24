@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.MathUtil;
@@ -20,16 +22,16 @@ public class SwerveModule {
 
     private double maxLinearSpeed = DEFAULT_MAX_LINEAR_SPEED;
     private double maxAngularSpeed = DEFAULT_MAX_ANGULAR_SPEED;
-    private final PositionalController linearMotor;
-    private final PositionalController angularMotor;
-    private final Positional angleSensor;
+    private final CANSparkBase linearMotor;
+    private final CANSparkBase angularMotor;
+    private final CANcoder angleSensor;
     private final Translation2d translation;
     private final PIDController pid = new PIDController(DEFAULT_P, 0d, 0d);
 
     public SwerveModule(
-        PositionalController linearMotor,
-        PositionalController angularMotor,
-        Positional angleSensor,
+        CANSparkBase linearMotor,
+        CANSparkBase angularMotor,
+        CANcoder angleSensor,
         Translation2d translation) {
         this.linearMotor = linearMotor;
         this.angularMotor = angularMotor;
@@ -45,14 +47,14 @@ public class SwerveModule {
         double angleOffset,
         double x,
         double y) {
-        var linearMotor = new CanSparkMax815(linearMotorId, MotorType.kBrushless);
-        var angularMotor = new CanSparkMax815(angularMotorId, MotorType.kBrushless);
+        var linearMotor = new CANSparkMax(linearMotorId, MotorType.kBrushless);
+        var angularMotor = new CANSparkMax(angularMotorId, MotorType.kBrushless);
         linearMotor.restoreFactoryDefaults();
         angularMotor.restoreFactoryDefaults();
         linearMotor.getEncoder().setPositionConversionFactor(0.046d);
         setMaxAcceleration(linearMotor, DEFAULT_MAX_LINEAR_ACCELERATION);
         setMaxAcceleration(angularMotor, DEFAULT_MAX_ANGULAR_ACCELERATION);
-        var angleSensor = new CanCoder815(angleSensorId);
+        var angleSensor = new CANcoder(angleSensorId);
         var config = new MagnetSensorConfigs();
         config.MagnetOffset = angleOffset;
         var configurator = angleSensor.getConfigurator();
@@ -61,16 +63,8 @@ public class SwerveModule {
         return new SwerveModule(linearMotor, angularMotor, angleSensor, new Translation2d(x, y));
     }
 
-    public static SwerveModule createDummy() {
-        return new SwerveModule(
-            new DummyMotorController(),
-            new DummyMotorController(),
-            new DummyEncoder(),
-            new Translation2d());
-    }
-
     public void drive(SwerveModuleState state) {
-        var angle = angleSensor.getPositionalPosition();
+        var angle = angleSensor.getAbsolutePosition().getValue();
         state = SwerveModuleState.optimize(
             state,
             Rotation2d.fromRotations(angle));
@@ -89,8 +83,8 @@ public class SwerveModule {
 
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
-            linearMotor.getPositionalPosition(),
-            Rotation2d.fromRotations(angleSensor.getPositionalPosition()));
+            linearMotor.getEncoder().getPosition(),
+            Rotation2d.fromRotations(angleSensor.getAbsolutePosition().getValue()));
     }
 
     private static void setMaxAcceleration(CANSparkMax motor, double maxAcceleration) {

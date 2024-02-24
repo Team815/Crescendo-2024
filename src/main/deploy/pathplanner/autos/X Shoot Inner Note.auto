@@ -26,27 +26,21 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "Speaker To Bottom Note"
+                        "name": "Shoot"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Bottom Note To Middle Note"
+                        "pathName": "Speaker To Inner Note"
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "Drive Over Middle Note"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Middle Note To Top Note"
+                        "name": "Shoot"
                       }
                     }
                   ]

@@ -11,9 +11,14 @@ public class Shooter extends PIDSubsystem {
 
     public Shooter(CANSparkBase motor, CANSparkBase follower) {
         super(new PIDController(0.0d, 0.00001d, 0d));
-        getController().setTolerance(50);
+        motor.restoreFactoryDefaults();
+        follower.restoreFactoryDefaults();
+        motor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        follower.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        motor.setInverted(true);
+        follower.follow(motor);
         this.motor = motor;
-        follower.follow(this.motor);
+        getController().setTolerance(50);
         feedforward = new SimpleMotorFeedforward(0d, 0.000185d);
     }
 

@@ -10,9 +10,9 @@ public interface InputDevice {
     double getAngularVelocity();
 
     Trigger resetHeading();
-    Trigger centerOnNote();
     Trigger centerOnAprilTag();
     Trigger pickup();
+    Trigger drop();
     Trigger test();
     Trigger shoot();
 }

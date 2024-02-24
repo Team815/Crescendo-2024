@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import com.revrobotics.CANSparkBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pickup extends SubsystemBase {
-    private final MotorController motor;
+    private final CANSparkBase motor;
 
-    public Pickup(MotorController motor) {
+    public Pickup(CANSparkBase motor) {
+        motor.restoreFactoryDefaults();
         this.motor = motor;
     }
 

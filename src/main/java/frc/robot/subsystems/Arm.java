@@ -53,6 +53,6 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public double getPosition() {
-        return motor.getEncoder().getPosition() - offset;
+        return Math.toDegrees(motor.getEncoder().getPosition() - offset);
     }
 }

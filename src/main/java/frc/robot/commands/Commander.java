@@ -17,11 +17,11 @@ public class Commander {
         this.shooter = shooter;
     }
 
-    public Command shootManual() {
+    public Command shootManual(double angle, double speed) {
         return Commands.startEnd(
             () -> {
-                arm.setPosition(Math.toRadians(30d));
-                shooter.run(2000d);
+                arm.setPosition(Math.toRadians(angle));
+                shooter.run(speed);
             },
             () -> {
                 shooter.stop();
@@ -34,9 +34,12 @@ public class Commander {
         return Commands.runOnce(() -> {
                 arm.setPosition(Math.toRadians(angle));
                 shooter.run(speed);
-            }).andThen(Commands.waitSeconds(4d)
+            },
+                arm,
+                shooter)
+            .andThen(Commands.waitSeconds(4d)
                 .raceWith(Commands.waitUntil(() -> arm.getController().atGoal() && shooter.getController().atSetpoint())))
-            .andThen(() -> pickup.run(0.3d));
+            .andThen(Commands.run(() -> pickup.run(0.3d), pickup));
     }
 
     public Command stopShooting() {
