@@ -151,6 +151,7 @@ public class RobotContainer {
         Dashboard.PublishDouble("Pose", "Angle", () -> drive.getPose().getRotation().getDegrees());
         Dashboard.PublishDouble("Arm", "Angle", arm::getPosition);
         Dashboard.PublishDouble("Shooter", "Speed", shooter::getVelocity);
+        Dashboard.PublishDouble("Shooter", "Power", shooter::getPower);
     }
 
     private void configureAutoCommands() {
@@ -219,9 +220,9 @@ public class RobotContainer {
             () -> pickup.run(0d),
             pickup));
 
-        controller.shoot().whileTrue(new ShootAuto(10d, 3000d, commander));
+        controller.shoot().whileTrue(new ShootAuto(aprilTagCamera::getY, 3000d, commander));
 
-        controller.test().whileTrue(new ShootAuto(22d, 3000d, commander));
+        controller.test().whileTrue(Commands.none());
     }
 
     public Command getAutonomousCommand() {

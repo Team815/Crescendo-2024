@@ -1,17 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Pickup;
-import frc.robot.subsystems.Shooter;
 
-import java.util.Set;
+import java.util.function.DoubleSupplier;
 
 public class ShootAuto extends ProxyCommand {
 
     private final Command endCommand;
 
-    public ShootAuto(double angle, double speed, Commander commander) {
+    public ShootAuto(DoubleSupplier angle, double speed, Commander commander) {
         super(commander.startShootingAuto(angle, speed));
         endCommand = commander.stopShooting();
     }

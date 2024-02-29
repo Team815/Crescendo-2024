@@ -46,4 +46,8 @@ public class Shooter extends PIDSubsystem {
     public double getVelocity() {
         return motor.getEncoder().getVelocity();
     }
+
+    public double getPower() {
+        return motor.get();
+    }
 }
