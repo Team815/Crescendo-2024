@@ -16,7 +16,7 @@ public class Arm extends ProfiledPIDSubsystem {
             1d,
             0d,
             0d,
-            new TrapezoidProfile.Constraints(1d, 4d)));
+            new TrapezoidProfile.Constraints(4d, 8d)));
         getController().setTolerance(0.1d);
         motor.restoreFactoryDefaults();
         follower.restoreFactoryDefaults();
@@ -28,7 +28,7 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder.setPosition(0d);
         follower.follow(motor, true);
         this.motor = motor;
-        feedforward = new ArmFeedforward(0d, 0.1d, 0d);
+        feedforward = new ArmFeedforward(0d, 0.097d, 0d);
     }
 
     public void setPosition(double position) {

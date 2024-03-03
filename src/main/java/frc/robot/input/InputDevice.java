@@ -10,6 +10,10 @@ public interface InputDevice {
     double getAngularVelocity();
 
     Trigger resetHeading();
+    Trigger resetHeadingForward();
+    Trigger resetHeadingRight();
+    Trigger resetHeadingBack();
+    Trigger resetHeadingLeft();
     Trigger centerOnAprilTag();
     Trigger pickup();
     Trigger drop();

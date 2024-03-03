@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7,
-      "y": 6.7
+      "x": 0.75,
+      "y": 4.4
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Speaker To Outer Note"
+                  "pathName": "Speaker To Inner"
                 }
               },
               {
@@ -37,6 +37,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Inner To Speaker"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "PrimeFeeder"
@@ -45,7 +51,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootOuter"
+            "name": "ShootClose"
           }
         }
       ]

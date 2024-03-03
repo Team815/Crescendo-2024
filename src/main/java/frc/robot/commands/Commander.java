@@ -35,14 +35,15 @@ public class Commander {
 
     public Command startShootingAuto(DoubleSupplier angle, double speed) {
         return Commands.runOnce(() -> {
-                arm.setPosition(calculateShooterAngle(angle.getAsDouble()));
-                shooter.run(speed);
-            },
+                    arm.setPosition(angle.getAsDouble());
+                    shooter.run(speed);
+                },
                 arm,
                 shooter)
             .andThen(Commands.waitSeconds(4d)
-                .raceWith(Commands.waitUntil(() -> arm.getController().atGoal() && shooter.getController().atSetpoint())))
-            .andThen(Commands.run(() -> pickup.run(0.3d), pickup));
+                .raceWith(Commands.waitUntil(() -> arm.getController().atGoal() && shooter.atSetpoint())
+                    /*.raceWith(Commands.run(() -> arm.setPosition(angle.getAsDouble())))*/))
+            .andThen(Commands.run(() -> pickup.run(Pickup.SHOOT_SPEED), pickup));
     }
 
     public Command stopShooting() {
@@ -58,10 +59,5 @@ public class Commander {
             .andThen(Commands.waitSeconds(2d)
                 .raceWith(Commands.waitUntil(() -> arm.getController().atGoal())))
             .andThen(arm::stop, arm);
-    }
-
-    private double calculateShooterAngle(double aprilTagAngle) {
-        var shooterAngle = MathUtil.clamp(16.623 - aprilTagAngle * 0.686, 5, 30);
-        return Math.toRadians(shooterAngle);
     }
 }

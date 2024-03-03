@@ -32,6 +32,26 @@ public class XboxController extends CommandXboxController implements InputDevice
     }
 
     @Override
+    public Trigger resetHeadingForward() {
+        return povUp();
+    }
+
+    @Override
+    public Trigger resetHeadingRight() {
+        return povRight();
+    }
+
+    @Override
+    public Trigger resetHeadingBack() {
+        return povDown();
+    }
+
+    @Override
+    public Trigger resetHeadingLeft() {
+        return povLeft();
+    }
+
+    @Override
     public Trigger centerOnAprilTag() {
         return rightBumper();
     }

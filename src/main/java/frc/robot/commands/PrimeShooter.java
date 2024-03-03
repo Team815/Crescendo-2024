@@ -26,6 +26,6 @@ public class PrimeShooter extends Command {
 
     @Override
     public boolean isFinished() {
-        return arm.getController().atGoal() && shooter.getController().atSetpoint();
+        return arm.getController().atGoal() && shooter.atSetpoint();
     }
 }

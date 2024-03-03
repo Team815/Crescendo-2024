@@ -1,6 +1,10 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import java.util.*;
 import java.util.function.DoubleConsumer;
@@ -42,5 +46,35 @@ public final class Dashboard {
 
     public static void update() {
         doublePublishers.forEach((supplier, publisher) -> publisher.set(supplier.getAsDouble()));
+    }
+
+    public static void createAutoLayout(RobotContainer container) {
+        var options = new String[] {
+            "1. Inner",
+            "2. Middle",
+            "3. Outer",
+            "4. Collect Center"
+        };
+        container.setAuto(options[0]);
+        var autoChooser = new SendableChooser<String>();
+        autoChooser.setDefaultOption(options[0], options[0]);
+        for (var option : Arrays.stream(options).skip(1).toArray(String[]::new)) {
+            autoChooser.addOption(option, option);
+        }
+        Shuffleboard
+            .getTab("Configuration")
+            .add("Autonomous", autoChooser)
+            .withWidget(BuiltInWidgets.kComboBoxChooser);
+        NetworkTableInstance
+            .getDefault()
+            .getTable("Shuffleboard")
+            .getSubTable("Configuration")
+            .getSubTable("Autonomous")
+            .addListener(
+                "selected",
+                EnumSet.of(NetworkTableEvent.Kind.kValueAll),
+                (table, key, event) -> {
+                    container.setAuto(event.valueData.value.getString());
+                });
     }
 }
