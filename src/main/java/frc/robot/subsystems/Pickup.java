@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
 public class Pickup extends PIDSubsystem {
@@ -10,6 +11,7 @@ public class Pickup extends PIDSubsystem {
     public static final double SHOOT_SPEED = 3600d;
     private final CANSparkBase motor;
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0.000192);
+    private final DigitalInput noteSensor = new DigitalInput(0);
 
     @Override
     protected void useOutput(double v, double v1) {
@@ -44,5 +46,9 @@ public class Pickup extends PIDSubsystem {
 
     public double getPower() {
         return motor.get();
+    }
+
+    public boolean hasNote() {
+        return noteSensor.get();
     }
 }

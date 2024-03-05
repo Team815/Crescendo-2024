@@ -13,8 +13,8 @@ public class Shooter extends SubsystemBase {
     private final PIDController[] pids;
     private boolean enabled = false;
     private final SimpleMotorFeedforward[] feedForwards = new SimpleMotorFeedforward[] {
-        new SimpleMotorFeedforward(0d, 0.000185d),
-        new SimpleMotorFeedforward(0d, 0.000205d)
+        new SimpleMotorFeedforward(0d, 0.000178d),
+        new SimpleMotorFeedforward(0d, 0.000188d)
     };
     private final DoubleSupplier motorSpeedDifference;
 
@@ -42,7 +42,6 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println(motorSpeedDifference.getAsDouble());
         if (enabled) {
             for (int i = 0; i <= 1; i++) {
                 motors[i].set(

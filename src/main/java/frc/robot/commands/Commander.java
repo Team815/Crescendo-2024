@@ -40,7 +40,7 @@ public class Commander {
                 },
                 arm,
                 shooter)
-            .andThen(Commands.waitSeconds(4d)
+            .andThen(Commands.waitSeconds(2d)
                 .raceWith(Commands.waitUntil(() -> arm.getController().atGoal() && shooter.atSetpoint())
                     /*.raceWith(Commands.run(() -> arm.setPosition(angle.getAsDouble())))*/))
             .andThen(Commands.run(() -> pickup.run(Pickup.SHOOT_SPEED), pickup));

@@ -151,12 +151,15 @@ public class RobotContainer {
         Dashboard.PublishDouble("Pose", "Sideways", () -> drive.getPose().getY());
         Dashboard.PublishDouble("Pose", "Angle", () -> drive.getPose().getRotation().getDegrees());
         Dashboard.PublishDouble("Arm", "Angle", arm::getPosition);
+        Dashboard.PublishDouble("Arm", "In Position", () -> arm.getController().atGoal() ? 1 : 0);
         Dashboard.PublishDouble("Shooter", "Speed1", () -> shooter.getVelocity(0));
         Dashboard.PublishDouble("Shooter", "Power1", () -> shooter.getPower(0));
         Dashboard.PublishDouble("Shooter", "Speed2", () -> shooter.getVelocity(1));
         Dashboard.PublishDouble("Shooter", "Power2", () -> shooter.getPower(1));
+        Dashboard.PublishDouble("Shooter", "At Speed", () -> shooter.atSetpoint() ? 1 : 0);
         Dashboard.PublishDouble("Pickup", "Speed", pickup::getVelocity);
         Dashboard.PublishDouble("Pickup", "Power", pickup::getPower);
+        Dashboard.PublishDouble("Pickup", "Note", () -> pickup.hasNote() ? 1 : 0);
         Dashboard.createAutoLayout(this);
     }
 
@@ -220,19 +223,7 @@ public class RobotContainer {
             controller::getSidewaysVelocity,
             aprilTagCamera::getX));
 
-        controller.pickup().whileTrue(Commands.startEnd(
-            () -> {
-                pickup.run(Pickup.PICKUP_SPEED);
-                speedScaler.setScales(0.5d, 0.5d, 0.5d);
-            },
-            () -> Commands.waitSeconds(0.1d)
-                .alongWith(Commands.runOnce(() -> {
-                    pickup.run(-Pickup.PICKUP_SPEED);
-                    speedScaler.setScales(1);
-                }))
-                .andThen(pickup::stop)
-                .schedule(),
-            pickup));
+        controller.pickup().whileTrue(new PickupNote(pickup));
 
         controller.drop().whileTrue(Commands.startEnd(
             () -> {
