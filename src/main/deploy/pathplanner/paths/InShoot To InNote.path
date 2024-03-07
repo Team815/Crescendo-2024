@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.75,
-        "y": 4.4
+        "x": 0.9,
+        "y": 4.35
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3491521419562087,
-        "y": 4.145636137206654
+        "x": 1.4991521419562086,
+        "y": 4.095636137206653
       },
       "isLocked": false,
-      "linkedName": "Inner Speaker"
+      "linkedName": "Inner Shoot"
     },
     {
       "anchor": {
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8,
+      "waypointRelativePos": 0.5,
       "rotationDegrees": 180.0,
       "rotateFast": false
     }

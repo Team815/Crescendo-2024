@@ -16,6 +16,7 @@ public class ShootAuto extends ProxyCommand {
 
     public ShootAuto(double angle, double speed, Commander commander) {
         super(commander.startShootingAuto(() -> Math.toRadians(angle), speed));
+        System.out.println(angle);
         endCommand = commander.stopShooting();
     }
 

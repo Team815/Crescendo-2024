@@ -12,19 +12,25 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ShootClose"
+            "pathName": "InSpeaker To InShoot"
           }
         },
         {
-          "type": "race",
+          "type": "named",
+          "data": {
+            "name": "ShootCloseOutside"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Speaker To Inner"
+                  "pathName": "InShoot To InNote"
                 }
               },
               {
@@ -39,19 +45,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Inner To Speaker"
+            "pathName": "InNote To InShoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "PrimeFeeder"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootClose"
+            "name": "ShootCloseOutside"
           }
         }
       ]

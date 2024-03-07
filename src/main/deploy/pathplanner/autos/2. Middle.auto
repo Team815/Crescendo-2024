@@ -14,11 +14,11 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootClose"
+            "name": "ShootCloseOutside"
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -45,13 +45,7 @@
         {
           "type": "named",
           "data": {
-            "name": "PrimeFeeder"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootClose"
+            "name": "ShootCloseOutside"
           }
         }
       ]

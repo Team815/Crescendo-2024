@@ -25,6 +25,7 @@ import frc.robot.subsystems.speedsmodulator.SpeedScaler;
 
 public class RobotContainer {
     private final InputDevice controller = new XboxController();
+    private final Limelight noteCamera = new Limelight("limelight-note");
     private final AprilTagLimelight aprilTagCamera = new AprilTagLimelight("limelight-tags");
     private double startingAngle;
     private Command resetHeadingCommand;
@@ -165,20 +166,17 @@ public class RobotContainer {
 
     private void configureAutoCommands() {
 
-        NamedCommands.registerCommand("Pickup", Commands.startEnd(
-            () -> pickup.run(Pickup.PICKUP_SPEED),
-            pickup::stop,
-            pickup));
+        NamedCommands.registerCommand("Pickup", new PickupNote(pickup));
 
         NamedCommands.registerCommand(
-            "PrimeFeeder",
-            Commands.waitSeconds(0.1d)
-                .alongWith(Commands.runOnce(() -> pickup.run(-Pickup.PICKUP_SPEED)))
-                .andThen(Commands.runOnce(pickup::stop)));
-
-        NamedCommands.registerCommand(
-            "ShootClose",
+            "ShootCloseMiddle",
             new PrimeShooter(10d, 3000d, shooter, arm).withTimeout(1.5d)
+                .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(2d)
+                .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
+
+        NamedCommands.registerCommand(
+            "ShootCloseOutside",
+            new PrimeShooter(8d, 3000d, shooter, arm).withTimeout(1.5d)
                 .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(2d)
                 .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
 
@@ -215,7 +213,11 @@ public class RobotContainer {
         controller.resetHeadingBack().onTrue(Commands.runOnce(() -> resetHeading(180d)));
         controller.resetHeadingLeft().onTrue(Commands.runOnce(() -> resetHeading(90d)));
 
-
+        controller.centerOnNote().whileTrue(new CenterOnTarget(
+            drive,
+            controller::getForwardVelocity,
+            controller::getSidewaysVelocity,
+            noteCamera::getX));
 
         controller.centerOnAprilTag().whileTrue(new CenterOnTarget(
             drive,
@@ -238,7 +240,7 @@ public class RobotContainer {
 
         controller.shoot().whileTrue(new ShootAuto(aprilTagCamera::getY, 3000d, commander));
 
-        controller.test().whileTrue(new ShootAuto(10d, 3000d, commander));
+        controller.scoreAmp().whileTrue(new ShootAuto(90d, 300d, commander));
     }
 
     public void setAuto(String autoName) {

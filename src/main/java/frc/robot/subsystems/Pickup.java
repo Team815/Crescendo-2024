@@ -6,12 +6,17 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
+import java.util.Arrays;
+
 public class Pickup extends PIDSubsystem {
     public static final double PICKUP_SPEED = 2000d;
     public static final double SHOOT_SPEED = 3600d;
     private final CANSparkBase motor;
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0.000192);
-    private final DigitalInput noteSensor = new DigitalInput(0);
+    private final DigitalInput[] noteSensors = new DigitalInput[] {
+        new DigitalInput(0),
+        new DigitalInput(1)
+    };
 
     @Override
     protected void useOutput(double v, double v1) {
@@ -49,6 +54,6 @@ public class Pickup extends PIDSubsystem {
     }
 
     public boolean hasNote() {
-        return noteSensor.get();
+        return Arrays.stream(noteSensors).anyMatch(DigitalInput::get);
     }
 }

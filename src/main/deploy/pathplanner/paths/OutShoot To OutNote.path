@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7,
-        "y": 6.7
+        "x": 0.85,
+        "y": 6.75
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5950797094176201,
-        "y": 6.792285196553275
+        "x": 1.3113561843476482,
+        "y": 6.557255425071991
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outer Shoot"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 6.8
       },
       "prevControl": {
-        "x": 1.9065505368260847,
-        "y": 6.2582179017134205
+        "x": 1.811989246393278,
+        "y": 6.184338524674342
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
