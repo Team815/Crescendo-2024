@@ -85,4 +85,9 @@ public class XboxController extends CommandXboxController implements InputDevice
     public Trigger scoreAmp() {
         return y();
     }
+
+    @Override
+    public Trigger climb() {
+        return x();
+    }
 }

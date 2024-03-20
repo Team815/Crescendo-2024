@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -15,10 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.*;
 import frc.robot.input.InputDevice;
 import frc.robot.input.XboxController;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Pickup;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.*;
 import frc.robot.subsystems.speedsmodulator.AccelerationLimiter;
 import frc.robot.subsystems.speedsmodulator.AngleCorrector;
 import frc.robot.subsystems.speedsmodulator.SpeedScaler;
@@ -37,6 +35,7 @@ public class RobotContainer {
     private final Pickup pickup;
     private final Shooter shooter;
     private final Arm arm;
+    private final Climber climber;
 
     public RobotContainer() {
         final int frontLeftSpinId = 1;
@@ -52,14 +51,17 @@ public class RobotContainer {
         final int shooterId2 = 11;
         final int armId1 = 12;
         final int armId2 = 13;
+        final int climberId1 = 14;
+        final int climberId2 = 15;
         final int frontLeftRotateSensorId = 1;
         final int frontRightRotateSensorId = 2;
         final int backLeftRotateSensorId = 3;
         final int backRightRotateSensorId = 4;
-        final double frontLeftAngularOffset = 0.271d;
+        final int armSensorId = 5;
+        final double frontLeftAngularOffset = 0.87d;
         final double frontRightAngularOffset = 0.57d;
-        final double backLeftAngularOffset = 0.47d;
-        final double backRightAngularOffset = 0.18d;
+        final double backLeftAngularOffset = 0.48d;
+        final double backRightAngularOffset = 0.17d;
         final double maxDriveSpeed = 4.4d;
 
         // The max frame perimeter length is 120 in. For a square chassis,
@@ -133,7 +135,13 @@ public class RobotContainer {
 
         arm = new Arm(
             new CANSparkMax(armId1, CANSparkLowLevel.MotorType.kBrushless),
-            new CANSparkMax(armId2, CANSparkLowLevel.MotorType.kBrushless));
+            new CANSparkMax(armId2, CANSparkLowLevel.MotorType.kBrushless),
+            new CANcoder(armSensorId));
+
+        climber = new Climber(
+            new CANSparkMax(climberId1, CANSparkLowLevel.MotorType.kBrushless),
+            new CANSparkMax(climberId2, CANSparkLowLevel.MotorType.kBrushless)
+        );
 
         commander = new Commander(pickup, arm, shooter);
 
@@ -161,6 +169,7 @@ public class RobotContainer {
         Dashboard.PublishDouble("Pickup", "Speed", pickup::getVelocity);
         Dashboard.PublishDouble("Pickup", "Power", pickup::getPower);
         Dashboard.PublishDouble("Pickup", "Note", () -> pickup.hasNote() ? 1 : 0);
+        Dashboard.PublishDouble("Camera", "Y", aprilTagCamera::getY);
         Dashboard.createAutoLayout(this);
     }
 
@@ -183,14 +192,25 @@ public class RobotContainer {
         NamedCommands.registerCommand(
             "ShootMiddle",
             new PrimeShooter(22d, 3000d, shooter, arm).withTimeout(1.5d)
-                .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(3d)
+                .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(2d)
                 .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
 
         NamedCommands.registerCommand(
             "ShootOuter",
-            new PrimeShooter(24d, 3000d, shooter, arm).withTimeout(1.5d)
-                .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(3d)
+            new PrimeShooter(21.5d, 3000d, shooter, arm).withTimeout(1d)
+                .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(2d)
                 .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
+
+        NamedCommands.registerCommand(
+            "PickupAndShoot",
+            Commands.run(
+                () -> {
+                    pickup.run(Pickup.PICKUP_SPEED);
+                    shooter.run(3000d);
+                },
+                pickup,
+                shooter)
+        );
     }
 
     private void configureBindings() {
@@ -240,7 +260,14 @@ public class RobotContainer {
 
         controller.shoot().whileTrue(new ShootAuto(aprilTagCamera::getY, 3000d, commander));
 
-        controller.scoreAmp().whileTrue(new ShootAuto(90d, 300d, commander));
+        controller.test().whileTrue(new ShootAuto(21.4d, 3000d, commander));
+
+        controller.scoreAmp().whileTrue(new ShootAuto(90d, 600d, commander));
+
+        controller.climb().whileTrue(Commands.startEnd(
+            () -> climber.run(0.5d),
+            () -> climber.run(0d)
+        ));
     }
 
     public void setAuto(String autoName) {
@@ -252,7 +279,7 @@ public class RobotContainer {
             .getStaringPoseFromAutoFile(autoName)
             .getRotation()
             .getDegrees();
-        return new PathPlannerAuto(autoName);
+        return new PathPlannerAuto(autoName).andThen(Commands.waitSeconds(15d));
     }
 
     public Command getTeleopInitCommand() {

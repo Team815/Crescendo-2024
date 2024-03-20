@@ -21,4 +21,5 @@ public interface InputDevice {
     Trigger test();
     Trigger shoot();
     Trigger scoreAmp();
+    Trigger climb();
 }

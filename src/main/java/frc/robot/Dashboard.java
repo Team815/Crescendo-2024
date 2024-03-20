@@ -53,7 +53,10 @@ public final class Dashboard {
             "1. Inner",
             "2. Middle",
             "3. Outer",
-            "4. Collect Center"
+            "4. Sweep Center",
+            "5. Inner Delayed",
+            "6. Middle Delayed",
+            "7. Outer Delayed"
         };
         container.setAuto(options[0]);
         var autoChooser = new SendableChooser<String>();

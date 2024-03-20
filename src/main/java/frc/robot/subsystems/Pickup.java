@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
 import java.util.Arrays;
@@ -13,6 +14,7 @@ public class Pickup extends PIDSubsystem {
     public static final double SHOOT_SPEED = 3600d;
     private final CANSparkBase motor;
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0.000192);
+    private final SerialPort light = new SerialPort(9600, SerialPort.Port.kUSB);
     private final DigitalInput[] noteSensors = new DigitalInput[] {
         new DigitalInput(0),
         new DigitalInput(1)
@@ -32,6 +34,16 @@ public class Pickup extends PIDSubsystem {
         super(new PIDController(0d, 0.0001d, 0d));
         motor.restoreFactoryDefaults();
         this.motor = motor;
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+        final byte ON = 0x14;
+        final byte OFF = 0x24;
+
+        var state = hasNote() ? ON : OFF;
+        light.write(new byte[] {state}, 1);
     }
 
     public void run(double speed) {

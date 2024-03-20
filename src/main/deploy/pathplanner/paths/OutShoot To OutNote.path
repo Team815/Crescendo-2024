@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3113561843476482,
-        "y": 6.557255425071991
+        "x": 1.4817998866766982,
+        "y": 6.7095211113499165
       },
       "isLocked": false,
       "linkedName": "Outer Shoot"
     },
     {
       "anchor": {
-        "x": 2.6,
-        "y": 6.8
+        "x": 2.65,
+        "y": 6.9
       },
       "prevControl": {
-        "x": 1.811989246393278,
-        "y": 6.184338524674342
+        "x": 2.2040432097982583,
+        "y": 6.440960100179829
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outer Note"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -145.0,
+    "rotation": -150.0,
     "rotateFast": false
   },
   "reversed": false,

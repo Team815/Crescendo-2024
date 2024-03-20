@@ -14,8 +14,13 @@ public class ShootAuto extends ProxyCommand {
         endCommand = commander.stopShooting();
     }
 
+    public ShootAuto(DoubleSupplier angle, double speed, double delay, Commander commander) {
+        super(commander.startShootingAuto(() -> calculateShooterAngle(angle), speed, delay));
+        endCommand = commander.stopShooting();
+    }
+
     public ShootAuto(double angle, double speed, Commander commander) {
-        super(commander.startShootingAuto(() -> Math.toRadians(angle), speed));
+        super(commander.startShootingAuto(() -> angle, speed));
         System.out.println(angle);
         endCommand = commander.stopShooting();
     }
@@ -28,11 +33,11 @@ public class ShootAuto extends ProxyCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        System.out.println("Ending");
         endCommand.schedule();
     }
 
     private static double calculateShooterAngle(DoubleSupplier aprilTagAngle) {
-        var shooterAngle = MathUtil.clamp(16.623 - aprilTagAngle.getAsDouble() * 0.686, 5, 30);
-        return Math.toRadians(shooterAngle);
+        return MathUtil.clamp(10 - aprilTagAngle.getAsDouble() * 0.7, 5, 30);
     }
 }

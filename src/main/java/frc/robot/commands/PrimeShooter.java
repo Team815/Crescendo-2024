@@ -20,7 +20,7 @@ public class PrimeShooter extends Command {
 
     @Override
     public void initialize() {
-        arm.setPosition(Math.toRadians(angle));
+        arm.setPosition(angle);
         shooter.run(speed);
     }
 

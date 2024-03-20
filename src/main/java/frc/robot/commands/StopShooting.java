@@ -21,7 +21,7 @@ public class StopShooting extends Command {
     public void initialize() {
         shooter.stop();
         pickup.stop();
-        arm.setPosition(Math.toRadians(0d));
+        arm.setPosition(0d);
     }
 
     @Override

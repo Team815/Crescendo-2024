@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -9,9 +10,9 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 public class Arm extends ProfiledPIDSubsystem {
     private final CANSparkBase motor;
     private final ArmFeedforward feedforward;
-    private final double offset = 0.237;
+    private final CANcoder angleSensor;
 
-    public Arm(CANSparkBase motor, CANSparkBase follower) {
+    public Arm(CANSparkBase motor, CANSparkBase follower, CANcoder angleSensor) {
         super(new ProfiledPIDController(
             1d,
             0d,
@@ -28,15 +29,17 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder.setPosition(0d);
         follower.follow(motor, true);
         this.motor = motor;
-        feedforward = new ArmFeedforward(0d, 0.097d, 0d);
+        this.angleSensor = angleSensor;
+        feedforward = new ArmFeedforward(0d, 0.124d, 0d);
     }
 
     public void setPosition(double position) {
-        setGoal(position + offset);
+        setGoal(Math.toRadians(position));
         enable();
     }
 
     public void stop() {
+        System.out.println("Stopping");
         disable();
         motor.stopMotor();
     }
@@ -44,15 +47,22 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override
     protected void useOutput(double v, TrapezoidProfile.State state) {
         var setpoint = getController().getSetpoint();
-        motor.set(v + feedforward.calculate(setpoint.position - offset, 0));
+        motor.set(v + feedforward.calculate(setpoint.position, 0d));
     }
 
     @Override
     protected double getMeasurement() {
-        return motor.getEncoder().getPosition();
+        return Math.toRadians(getPosition());
     }
 
     public double getPosition() {
-        return Math.toDegrees(motor.getEncoder().getPosition() - offset);
+        final var encoderOffset = 0.421d;
+        final var armOffset = -12d;
+
+        return 360d * (encoderOffset - angleSensor.getAbsolutePosition().getValue()) + armOffset;
+    }
+
+    public void set(double power) {
+        motor.set(power);
     }
 }

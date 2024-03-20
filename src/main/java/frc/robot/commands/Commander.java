@@ -23,7 +23,7 @@ public class Commander {
     public Command shootManual(double angle, double speed) {
         return Commands.startEnd(
             () -> {
-                arm.setPosition(Math.toRadians(angle));
+                arm.setPosition(angle);
                 shooter.run(speed);
             },
             () -> {
@@ -34,6 +34,10 @@ public class Commander {
     }
 
     public Command startShootingAuto(DoubleSupplier angle, double speed) {
+        return startShootingAuto(angle, speed, 0d);
+    }
+
+    public Command startShootingAuto(DoubleSupplier angle, double speed, double delay) {
         return Commands.runOnce(() -> {
                     arm.setPosition(angle.getAsDouble());
                     shooter.run(speed);
@@ -43,6 +47,7 @@ public class Commander {
             .andThen(Commands.waitSeconds(2d)
                 .raceWith(Commands.waitUntil(() -> arm.getController().atGoal() && shooter.atSetpoint())
                     /*.raceWith(Commands.run(() -> arm.setPosition(angle.getAsDouble())))*/))
+            .andThen(Commands.waitSeconds(delay))
             .andThen(Commands.run(() -> pickup.run(Pickup.SHOOT_SPEED), pickup));
     }
 
@@ -55,7 +60,7 @@ public class Commander {
     }
 
     public Command dropArm() {
-        return Commands.runOnce(() -> arm.setPosition(Math.toRadians(0d)), arm)
+        return Commands.runOnce(() -> arm.setPosition(0d), arm)
             .andThen(Commands.waitSeconds(2d)
                 .raceWith(Commands.waitUntil(() -> arm.getController().atGoal())))
             .andThen(arm::stop, arm);
