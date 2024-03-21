@@ -43,47 +43,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "OutNote To OutShoot"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "ShootOuter"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "OutNote To Note 8"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "PickupAndShoot"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "45sweep"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "PickupAndShoot"
-                }
-              }
-            ]
+            "name": "ShootCloseOutside"
           }
         }
       ]

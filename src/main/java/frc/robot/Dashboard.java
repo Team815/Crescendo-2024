@@ -56,7 +56,8 @@ public final class Dashboard {
             "4. Sweep Center",
             "5. Inner Delayed",
             "6. Middle Delayed",
-            "7. Outer Delayed"
+            "7. Outer Delayed",
+            "8. James"
         };
         container.setAuto(options[0]);
         var autoChooser = new SendableChooser<String>();
