@@ -30,35 +30,28 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "InShoot To Note 4"
+                  "pathName": "InShoot To InNote"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "PickupAndShoot"
+                  "name": "Pickup"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "45sweepReverse"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "PickupAndShoot"
-                }
-              }
-            ]
+            "pathName": "InNote To InShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootCloseOutside"
           }
         }
       ]
