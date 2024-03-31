@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7,
-      "y": 6.7
+      "x": 0.75,
+      "y": 4.4
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "OutSpeaker To OutShoot"
+            "pathName": "InSpeaker To InShoot"
           }
         },
         {
@@ -30,7 +30,63 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "OutShoot To OutNote"
+                  "pathName": "InShoot To InNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Inner To Middle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootCloseMiddle"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Middle To Middle Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootMiddle"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Middle Note To Outer Note"
                 }
               },
               {
@@ -46,44 +102,6 @@
           "type": "named",
           "data": {
             "name": "ShootOuter"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "OutNote To Note 8"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "PickupAndShoot"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Sweep Center"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Pickup"
-                }
-              }
-            ]
           }
         }
       ]
