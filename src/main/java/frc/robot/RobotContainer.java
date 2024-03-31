@@ -202,6 +202,17 @@ public class RobotContainer {
                 .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
 
         NamedCommands.registerCommand(
+            "PickupAndShootSlow",
+            Commands.run(
+                () -> {
+                    pickup.run(Pickup.PICKUP_SPEED);
+                    shooter.run(1000d);
+                },
+                pickup,
+                shooter)
+        );
+
+        NamedCommands.registerCommand(
             "PickupAndShoot",
             Commands.run(
                 () -> {

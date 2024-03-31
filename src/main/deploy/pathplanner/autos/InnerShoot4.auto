@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7,
-      "y": 6.7
+      "x": 0.75,
+      "y": 4.4
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "OutSpeaker To OutShoot"
+            "pathName": "InSpeaker To InShoot"
           }
         },
         {
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "OutShoot To OutNote"
+                  "pathName": "InShoot To InNote"
                 }
               },
               {
@@ -45,7 +45,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootOuter"
+            "name": "ShootCloseOutside"
           }
         },
         {
@@ -55,32 +55,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "OutNote To Note 8"
+                  "pathName": "Inner To Middle"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "PickupAndShootSlow"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "45sweep"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "PickupAndShoot"
+                  "name": "Pickup"
                 }
               }
             ]
