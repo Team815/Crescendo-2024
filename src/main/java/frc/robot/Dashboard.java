@@ -50,9 +50,10 @@ public final class Dashboard {
 
     public static void createAutoLayout(RobotContainer container) {
         var options = new String[] {
-            "1. Inner",
+            "1. Inner Sweep",
             "2. Middle",
-            "3. Outer",
+            "3. Outer Sweep",
+            "4. Inner Shoot 4",
             "5. Inner Delayed",
             "6. Middle Delayed",
             "7. Outer Delayed"
