@@ -55,6 +55,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -74,9 +80,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Middle Note to Middle"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "ShootMiddle"
+            "name": "ShootCloseMiddle"
           }
         },
         {

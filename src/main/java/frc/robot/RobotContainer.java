@@ -179,25 +179,31 @@ public class RobotContainer {
 
         NamedCommands.registerCommand(
             "ShootCloseMiddle",
-            new PrimeShooter(10d, 3000d, shooter, arm).withTimeout(1.5d)
+            new PrimeShooter(11d, 3250d, shooter, arm).withTimeout(1.5d)
                 .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(2d)
                 .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
 
         NamedCommands.registerCommand(
             "ShootCloseOutside",
-            new PrimeShooter(8d, 3000d, shooter, arm).withTimeout(1.5d)
+            new PrimeShooter(8d, 3250d, shooter, arm).withTimeout(1.5d)
                 .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(2d)
                 .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
 
         NamedCommands.registerCommand(
             "ShootMiddle",
-            new PrimeShooter(22d, 3000d, shooter, arm).withTimeout(1.5d)
+            new PrimeShooter(23d, 3250d, shooter, arm).withTimeout(1.5d)
                 .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(2d)
                 .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
 
         NamedCommands.registerCommand(
             "ShootOuter",
-            new PrimeShooter(21.5d, 3000d, shooter, arm).withTimeout(1d)
+            new PrimeShooter(21.5d, 3250d, shooter, arm).withTimeout(1d)
+                .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(2d)
+                .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
+
+        NamedCommands.registerCommand(
+            "MiddleAndShootOuter",
+            new PrimeShooter(23d, 3250d, shooter, arm).withTimeout(1d)
                 .andThen(Commands.run(() -> pickup.run(Pickup.PICKUP_SPEED), pickup)).withTimeout(2d)
                 .andThen(new StopShooting(arm, shooter, pickup).withTimeout(1d)));
 
@@ -206,7 +212,7 @@ public class RobotContainer {
             Commands.run(
                 () -> {
                     pickup.run(Pickup.PICKUP_SPEED);
-                    shooter.run(1000d);
+                    shooter.run(2750d);
                 },
                 pickup,
                 shooter)
